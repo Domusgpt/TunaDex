@@ -3,1076 +3,285 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seafood Shipment Dashboard</title>
-    <!-- Make sure chart.min.js is accessible -->
+    <title>D'ASCOLA SEAFOOD</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="js/chart.min.js"></script>
+    <!-- *** VERIFY FAVICON PATH: Expects frontend/img/marlin-logo.png *** -->
+    <link rel="icon" href="img/marlin-logo.png" type="image/png">
     <style>
-        /* --- Styles remain exactly the same --- */
-        :root {
-            --primary-bg: #f4f7f9;
-            --secondary-bg: #ffffff;
-            --header-bg: #2c3e50;
-            --header-text: #ffffff;
-            --card-shadow: rgba(0,0,0,0.08);
-            --text-color: #333;
-            --text-muted: #555;
-            --border-color: #e0e0e0;
-            --accent-color: #3498db;
-            --accent-hover: #2980b9;
-            --success-color: #2ecc71;
-            --error-color: #e74c3c;
-            --info-color: #3498db;
-            --chart-color-1: #3498db;
-            --chart-color-2: #2ecc71;
-            --chart-color-3: #f1c40f;
-            --chart-color-4: #e74c3c;
-            --chart-color-5: #9b59b6;
-            --chart-color-6: #1abc9c;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-            margin: 0;
-            padding: 0;
-            background-color: var(--primary-bg);
-            color: var(--text-color);
-            line-height: 1.6;
-            font-size: 16px; /* Base font size */
-        }
-        .container {
-            max-width: 1200px; /* Allow wider content */
-            margin: 0 auto; /* Center container */
-            padding: 15px;
-        }
-        .header {
-            background-color: var(--header-bg);
-            color: var(--header-text);
-            padding: 15px 20px;
-            margin-bottom: 20px;
-            border-radius: 0 0 5px 5px; /* Slight rounding */
-        }
-        .header h1 {
-            margin: 0;
-            font-size: 1.8em;
-            font-weight: 600;
-        }
-        .card {
-            background-color: var(--secondary-bg);
-            border-radius: 8px; /* More pronounced rounding */
-            box-shadow: 0 4px 12px var(--card-shadow); /* Softer shadow */
-            padding: 20px;
-            margin-bottom: 20px; /* Increased spacing */
-        }
-        .row {
-            display: flex;
-            flex-wrap: wrap;
-            margin: 0 -10px; /* Gutter compensation */
-        }
-        /* Responsive columns */
-        .col {
-            flex: 1;
-            padding: 0 10px;
-            min-width: 280px; /* Adjust min-width as needed */
-            margin-bottom: 20px;
-        }
-        /* Metrics layout */
-        .metrics {
-            display: grid; /* Use grid for better alignment */
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Responsive grid */
-            gap: 15px; /* Space between grid items */
-            margin-bottom: 20px;
-        }
-        .metric-card {
-            background-color: var(--secondary-bg);
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-            padding: 15px;
-            text-align: center; /* Center metric content */
-            border: 1px solid var(--border-color);
-        }
-        .metric-value {
-            font-size: 2em; /* Larger value */
-            font-weight: 600; /* Semi-bold */
-            color: var(--header-bg);
-            margin-bottom: 5px;
-            line-height: 1.1;
-        }
-        .metric-label {
-            color: var(--text-muted);
-            font-size: 0.9em;
-            margin-bottom: 3px;
-            font-weight: 500;
-        }
-        .metric-subtext { /* Added class for subtext */
-            color: #7f8c8d;
-            font-size: 0.8em;
-        }
-        /* Form styling */
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 8px; /* Increased space */
-            font-weight: 600; /* Bold labels */
-            font-size: 0.9em;
-            color: var(--text-color);
-        }
-        input[type="text"],
-        input[type="date"],
-        input[type="file"],
-        select,
-        button {
-            width: 100%;
-            padding: 10px 12px; /* Better padding */
-            border: 1px solid #ccc; /* Softer border */
-            border-radius: 5px;
-            box-sizing: border-box;
-            font-size: 1em;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
-            background-color: var(--secondary-bg);
-            color: var(--text-color);
-        }
-        input[type="file"] {
-            padding: 8px 12px; /* Slightly less padding for file input */
-        }
-        input:focus, select:focus {
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
-            outline: none;
-        }
-        button {
-            background-color: var(--accent-color);
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            padding: 12px 15px; /* Larger button */
-            transition: background-color 0.2s ease;
-        }
-        button:hover {
-            background-color: var(--accent-hover);
-        }
-        button:disabled {
-            background-color: #bdc3c7;
-            cursor: not-allowed;
-        }
-        /* Table styling */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-        th, td {
-            padding: 12px 15px; /* Comfortable padding */
-            text-align: left;
-            border-bottom: 1px solid var(--border-color); /* Lighter border */
-            vertical-align: top; /* Align top for multiline content */
-        }
-        th {
-            background-color: #f2f5f7; /* Subtle header background */
-            font-weight: 600;
-            font-size: 0.85em; /* Slightly smaller header */
-            text-transform: uppercase;
-            color: var(--text-muted);
-        }
-        tbody tr:hover {
-            background-color: #f9f9f9; /* Hover effect */
-        }
-        .shipment-row {
-            cursor: pointer;
-        }
-         .shipment-row:hover .expand-icon::after { /* Style for icon on hover */
-            color: var(--accent-color);
-        }
-        .shipment-details {
-            display: none; /* Initially hidden */
-            background-color: #fbfcfe; /* Slightly different background */
-        }
-        .shipment-details td {
-            padding: 0; /* Remove padding from outer cell */
-            border: none; /* Remove border from outer cell */
-        }
-        .shipment-details table {
-            margin: 0; /* Remove margin from inner table */
-            border: 1px solid #e9eef2; /* Inner table border */
-             background-color: #fbfcfe;
-        }
-         .shipment-details th {
-             background-color: #e9eef2; /* Different header for details */
-             font-size: 0.8em;
-         }
-         .shipment-details td {
-             padding: 10px 12px; /* Padding for inner cells */
-             border-bottom: 1px solid #e5e5e5;
-             border-left: 1px solid #e5e5e5; /* Vertical lines */
-             font-size: 0.9em; /* Slightly smaller text in details */
-         }
-          .shipment-details th:first-child,
-          .shipment-details td:first-child {
-            border-left: none;
-          }
-
-        /* Chart container */
-        .chart-container {
-            position: relative;
-            height: 350px; /* Increased default height */
-            width: 100%;
-        }
-        /* Status message styling */
-        #uploadStatus, #dataStatus {
-            margin-top: 10px;
-            font-size: 0.9em;
-            font-weight: 500;
-            min-height: 1.2em; /* Prevent layout shift */
-        }
-         .status-success { color: var(--success-color); }
-         .status-error { color: var(--error-color); }
-         .status-info { color: var(--info-color); }
-
-         /* Loading overlay */
-         .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(255, 255, 255, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            font-size: 1.2em;
-            color: var(--text-muted);
-            visibility: hidden;
-            opacity: 0;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-         }
-         .loading-overlay.visible {
-             visibility: visible;
-             opacity: 1;
-         }
-         /* Spinner */
-        .spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border-left-color: var(--accent-color);
-            margin-right: 10px;
-            animation: spin 1s ease infinite;
-        }
-         /* Added class for the loading message */
-        .loading-message {
-            font-weight: 500;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-
-         /* Small screen adjustments */
-         @media (max-width: 768px) {
-            .col {
-                min-width: 100%; /* Stack columns */
-                margin-bottom: 15px;
-            }
-            .metrics {
-                 grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Adjust metrics grid */
-            }
-            .header h1 {
-                font-size: 1.5em;
-            }
-            body { font-size: 15px; }
-             .metric-value { font-size: 1.8em; }
-             th, td { padding: 10px 8px; } /* Reduce padding on small screens */
-             .shipment-details td { font-size: 0.85em; }
-         }
+        /* --- CSS Styles (Same as previous version) --- */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root { --bg-color: #F8F9FA; --card-bg: #FFFFFF; --text-color: #212529; --text-muted: #6C757D; --border-color: #DEE2E6; --primary-blue: #2C5E8D; --primary-blue-hover: #244c73; --accent-green: #009739; --accent-yellow: #FFDF00; --accent-yellow-muted: #f0d94d; --success-color: #198754; --error-color: #DC3545; --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.07); --card-radius: 10px; --transition-speed: 0.2s; /* Chart Colors */ --chart-color-1: #2C5E8D; --chart-color-2: #007a2f; --chart-color-3: #e6c60d; --chart-color-4: #E57373; --chart-color-5: #9575CD; --chart-color-6: #4FC3F7; }
+        html { scroll-behavior: smooth; }
+        body { font-family: var(--font-family); background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; font-size: 16px; overflow-x: hidden; /* *** VERIFY BACKGROUND PATH: Expects frontend/img/dascola-pattern.png *** */ background-image: url('img/dascola-pattern.png'); background-repeat: repeat; background-attachment: fixed; }
+        .container { max-width: 1300px; margin: 0 auto; padding: 20px; }
+        .header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; padding: 15px 25px; margin-bottom: 30px; background-color: var(--card-bg); box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); border-radius: var(--card-radius); position: sticky; top: 10px; z-index: 100; border: 1px solid var(--border-color); margin-left: 15px; margin-right: 15px; max-width: 1300px; margin: 10px auto 30px auto; }
+        .header-title { display: flex; align-items: center; margin-right: 20px; margin-bottom: 10px; }
+        .header-logo { width: 55px; height: auto; margin-right: 15px; object-fit: contain; }
+        .header-text h1 { font-size: 1.8em; font-weight: 700; color: var(--text-color); margin: 0; line-height: 1.1; }
+        .header-text h2 { font-size: 1.1em; font-weight: 400; color: var(--text-muted); margin: 0; }
+        .header-controls { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; margin-bottom: 10px; }
+        .toggle-switch { display: flex; align-items: center; gap: 8px; font-size: 0.9em; font-weight: 500; color: var(--text-muted); }
+        .switch { position: relative; display: inline-block; width: 48px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; border-radius: 24px; transition: var(--transition-speed); }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; border-radius: 50%; transition: var(--transition-speed); box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+        input:checked + .slider { background-color: var(--primary-blue); }
+        input:checked + .slider:before { transform: translateX(24px); }
+        .card { background-color: var(--card-bg); border-radius: var(--card-radius); box-shadow: var(--card-shadow); padding: 25px; margin-bottom: 30px; transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease; border: 1px solid #edf2f7; }
+        .card h2 { margin-bottom: 20px; font-weight: 600; font-size: 1.3em; color: var(--text-color); padding-bottom: 12px; border-bottom: 1px solid var(--border-color); position: relative; }
+        .row { display: flex; flex-wrap: wrap; margin: 0 -15px; }
+        .col { flex: 1; padding: 0 15px; min-width: 280px; margin-bottom: 20px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 500; font-size: 0.9em; color: var(--text-muted); }
+        input[type="text"], input[type="date"], input[type="file"], select { width: 100%; padding: 12px 15px; border: 1px solid var(--border-color); border-radius: 6px; box-sizing: border-box; font-size: 1em; background-color: #fff; color: var(--text-color); transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease; }
+        input[type="file"] { padding: 10px 15px; }
+        input:focus, select:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(44, 94, 141, 0.2); outline: none; }
+        button { width: 100%; padding: 12px 20px; border: none; border-radius: 6px; background-color: var(--primary-blue); color: white; font-weight: 600; font-size: 1em; cursor: pointer; transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease; }
+        button:hover { background-color: var(--primary-blue-hover); transform: translateY(-1px); }
+        button:active { transform: translateY(0); }
+        button:disabled { background-color: #adb5bd; cursor: not-allowed; }
+        button#refreshButton { background-color: var(--accent-green); } button#refreshButton:hover { background-color: #007a2f; }
+        .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .metric-card { background-color: var(--card-bg); border-radius: var(--card-radius); padding: 25px 20px; text-align: center; transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid var(--border-color); }
+        .metric-card:hover { transform: translateY(-3px); box-shadow: 0 6px 18px rgba(0,0,0,0.09); }
+        .metric-value { font-size: 2.4em; font-weight: 700; color: var(--primary-blue); margin-bottom: 5px; line-height: 1.1; }
+        .metric-label { color: var(--text-muted); font-size: 0.95em; margin-bottom: 5px; font-weight: 500; }
+        .metric-subtext { color: var(--text-muted); font-size: 0.85em; font-weight: 400; }
+        .chart-container { position: relative; height: 380px; width: 100%; }
+        #shipmentTableContainer { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; font-size: 0.95em; }
+        th { font-weight: 600; font-size: 0.85em; text-transform: uppercase; color: var(--text-muted); background-color: #f1f3f5; letter-spacing: 0.5px; border-bottom-width: 2px; border-color: #ced4da; position: sticky; top: 0; }
+        tbody tr { transition: background-color var(--transition-speed) ease; }
+        tbody tr:hover { background-color: #e9ecef; }
+        .shipment-row { cursor: pointer; }
+        .shipment-details { display: none; }
+        .shipment-details td { padding: 0; background-color: #fdfdfe; }
+        .shipment-details table { margin: 0; border: 1px solid #e9ecef; }
+        .shipment-details th { background-color: #eef2f7; font-size: 0.8em; position: static; }
+        .shipment-details td { padding: 10px 15px; font-size: 0.9em; }
+        .col-awb, .col-fish-size, .col-box-size { display: none; }
+        .loading-overlay { background-color: rgba(248, 249, 250, 0.85); backdrop-filter: blur(4px); position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; z-index: 1000; font-size: 1.2em; color: var(--text-muted); visibility: hidden; opacity: 0; transition: opacity 0.3s ease, visibility 0.3s ease; }
+        .loading-overlay.visible { visibility: visible; opacity: 1; }
+        .spinner { border: 4px solid rgba(0, 0, 0, 0.1); width: 36px; height: 36px; border-radius: 50%; border-left-color: var(--primary-blue); margin-right: 10px; animation: spin 1s ease infinite; }
+        .loading-message { font-weight: 500; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        #uploadStatus, #dataStatus { font-weight: 500; min-height: 1.3em; margin-top: 10px; font-size: 0.9em;}
+        .status-success { color: var(--success-color); }
+        .status-error { color: var(--error-color); }
+        .status-info { color: var(--primary-blue); }
+        @media (max-width: 992px) { .header { position: static; margin-left: 0; margin-right: 0;} }
+        @media (max-width: 768px) { .header { padding: 15px; flex-direction: column; gap: 15px; text-align: center; } .header-controls { justify-content: center; flex-wrap: wrap;} .header-text h1 { font-size: 1.5em; } .header-text h2 { font-size: 0.9em; } .col { min-width: 100%; margin-bottom: 15px; } .metrics { grid-template-columns: repeat(2, 1fr); gap: 15px; } body { font-size: 15px; } .metric-value { font-size: 1.8em; } th, td { padding: 10px 8px; font-size: 0.9em; } .card { padding: 20px; } .chart-container { height: 300px; } }
+        @media (max-width: 480px) { .metrics { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
+    <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="spinner"></div>
-        <!-- Wrap message in a span with a class -->
-        <span class="loading-message">Loading...</span>
+        <span class="loading-message" data-lang="loading">Loading...</span>
     </div>
 
-    <div class="header">
-        <h1>Seafood Shipment Dashboard</h1>
-    </div>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-title">
+             <!-- *** VERIFY LOGO PATH: Expects frontend/img/marlin-logo.png *** -->
+            <img src="img/marlin-logo.png" alt="D'Ascola Logo" class="header-logo">
+            <div class="header-text">
+                 <h1 data-lang="mainTitle">D'ASCOLA SEAFOOD</h1>
+                 <h2 data-lang="subTitle">Dex Do Peixe</h2>
+            </div>
+        </div>
+        <div class="header-controls">
+            <div class="toggle-switch"> <span data-lang="langLabel">Lang:</span> <span data-lang="langEN">EN</span> <label class="switch"> <input type="checkbox" id="languageToggle"> <span class="slider"></span> </label> <span data-lang="langPT">PT</span> </div>
+            <div class="toggle-switch"> <span data-lang="unitLabel">Units:</span> <span data-lang="unitLbs">lbs</span> <label class="switch"> <input type="checkbox" id="unitToggle"> <span class="slider"></span> </label> <span data-lang="unitKg">kg</span> </div>
+        </div>
+    </header>
 
+    <!-- Main Container -->
     <div class="container">
-        <!-- Controls -->
+        <!-- Controls Card -->
         <div class="card">
+             <h2 data-lang="controlsTitle">Shipment Management</h2>
              <div class="row">
-                <div class="col">
-                    <div class="form-group">
-                        <label for="fileUpload">Upload Daily JSON File</label>
-                        <input type="file" id="fileUpload" accept=".json">
-                    </div>
-                    <div class="form-group">
-                        <button id="uploadButton">Upload File</button>
-                    </div>
-                    <div id="uploadStatus"></div>
-                </div>
-                <div class="col">
-                    <div class="form-group">
-                        <label for="startDate">Start Date</label>
-                        <input type="date" id="startDate">
-                    </div>
-                    <div class="form-group">
-                        <label for="endDate">End Date</label>
-                        <input type="date" id="endDate">
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="form-group">
-                        <label for="reportType">Report Type (Future)</label>
-                        <select id="reportType" disabled> <!-- Disabled as backend logic is same for now -->
-                            <option value="daily" selected>Daily</option>
-                            <option value="weekly">Weekly (Aggregated Daily)</option>
-                            <option value="monthly">Monthly (Aggregated Daily)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <button id="refreshButton">Refresh Data</button>
-                    </div>
-                     <div id="dataStatus"></div>
-                </div>
+                <div class="col"> <div class="form-group"> <label for="fileUpload" data-lang="uploadLabel">Upload Daily JSON</label> <input type="file" id="fileUpload" accept=".json"> </div> <div class="form-group"> <button id="uploadButton" data-lang="uploadButton">Upload File</button> </div> <div id="uploadStatus"></div> </div>
+                <div class="col"> <div class="form-group"> <label for="startDate" data-lang="startDateLabel">Start Date</label> <input type="date" id="startDate"> </div> <div class="form-group"> <label for="endDate" data-lang="endDateLabel">End Date</label> <input type="date" id="endDate"> </div> </div>
+                <div class="col"> <div class="form-group" style="margin-top: 32px;"> <button id="refreshButton" data-lang="refreshButton">Refresh Data</button> </div> <div id="dataStatus"></div> </div>
             </div>
         </div>
 
         <!-- Metrics -->
         <div class="metrics" id="metrics">
-            <!-- Placeholder metrics -->
-            <div class="metric-card"><div class="metric-value">-</div><div class="metric-label">Total Boxes</div><div class="metric-subtext">Loading...</div></div>
-            <div class="metric-card"><div class="metric-value">-</div><div class="metric-label">Total Weight</div><div class="metric-subtext">Loading...</div></div>
-            <div class="metric-card"><div class="metric-value">-</div><div class="metric-label">Unique Customers</div><div class="metric-subtext">Loading...</div></div>
-            <div class="metric-card"><div class="metric-value">-</div><div class="metric-label">Primary Species</div><div class="metric-subtext">Loading...</div></div>
+             <div class="metric-card"><div class="metric-value">-</div><div class="metric-label" data-lang="metricBoxes">Total Boxes</div><div class="metric-subtext">...</div></div> <div class="metric-card"><div class="metric-value">-</div><div class="metric-label" data-lang="metricWeight">Total Weight</div><div class="metric-subtext">...</div></div> <div class="metric-card"><div class="metric-value">-</div><div class="metric-label" data-lang="metricCustomers">Unique Customers</div><div class="metric-subtext">...</div></div> <div class="metric-card"><div class="metric-value">-</div><div class="metric-label" data-lang="metricSpecies">Primary Species</div><div class="metric-subtext">...</div></div>
         </div>
 
         <!-- Charts -->
-        <div class="row">
-            <div class="col">
-                <div class="card">
-                    <h2>Daily Shipment Volume</h2>
-                    <div class="chart-container">
-                        <canvas id="volumeChart"></canvas>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card">
-                    <h2>Customer Count by Day</h2>
-                    <div class="chart-container">
-                        <canvas id="customerChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col">
-                <div class="card">
-                    <h2>Species Distribution (by Weight)</h2>
-                    <div class="chart-container">
-                        <canvas id="speciesChart"></canvas>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card">
-                    <h2>Top 5 Customers (by Weight)</h2>
-                    <div class="chart-container">
-                        <canvas id="topCustomersChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <h2>Average Swordfish Size per Box by Customer</h2>
-            <div class="chart-container">
-                <canvas id="swordfishChart"></canvas>
-            </div>
-        </div>
+        <div class="row"> <div class="col"> <div class="card"> <h2 data-lang="chartVolumeTitle">Daily Shipment Volume</h2> <div class="chart-container"> <canvas id="volumeChart"></canvas> </div> </div> </div> <div class="col"> <div class="card"> <h2 data-lang="chartCustomersTitle">Customer Count by Day</h2> <div class="chart-container"> <canvas id="customerChart"></canvas> </div> </div> </div> </div>
+        <div class="row"> <div class="col"> <div class="card"> <h2 data-lang="chartSpeciesTitle">Species Distribution</h2> <div class="chart-container"> <canvas id="speciesChart"></canvas> </div> </div> </div> <div class="col"> <div class="card"> <h2 data-lang="chartTopCustomersTitle">Top Customers</h2> <div class="chart-container"> <canvas id="topCustomersChart"></canvas> </div> </div> </div> </div>
+        <div class="card"> <h2 data-lang="chartSwordfishTitle">Avg. Swordfish Size/Box</h2> <div class="chart-container"> <canvas id="swordfishChart"></canvas> </div> </div>
 
         <!-- Shipment Table -->
         <div class="card">
-            <h2>Shipment Details (Click row to expand)</h2>
-            <div id="shipmentTableContainer" style="overflow-x: auto;"> <!-- Make table scrollable horizontally if needed -->
+            <h2 data-lang="tableTitle">Shipment Details</h2>
+            <div id="shipmentTableContainer">
                 <table id="shipmentTable">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Boxes</th>
-                            <th>Weight (lbs)</th>
-                            <th>Customers</th>
-                            <th>Species</th>
-                        </tr>
-                    </thead>
-                    <tbody id="shipmentTableBody">
-                        <tr><td colspan="5" style="text-align: center;">Initializing...</td></tr>
-                    </tbody>
+                    <thead> <tr> <th data-lang="tableColDate">Date</th> <th data-lang="tableColBoxes">Boxes</th> <th data-lang="tableColWeight">Weight</th> <th data-lang="tableColCustCount">Customers</th> <th data-lang="tableColSpecies">Species</th> </tr> </thead>
+                    <tbody id="shipmentTableBody"> <tr><td colspan="5" style="text-align: center;" data-lang="statusInit">Initializing...</td></tr> </tbody>
                 </table>
             </div>
         </div>
-    </div>
+
+        <!-- Footer -->
+         <footer style="text-align: center; padding: 20px; margin-top: 30px; color: var(--text-muted); font-size: 0.9em;">
+            <span data-lang="footerText">D'Ascola Seafood Data Dashboard</span> &copy; 2025
+            <!-- *** VERIFY EMBLEM PATH: Expects frontend/img/swordfish-emblem.png *** -->
+            <img src="img/swordfish-emblem.png" alt="Emblem" style="height: 30px; vertical-align: middle; margin-left: 10px; opacity: 0.8;">
+        </footer>
+
+    </div><!-- End Container -->
 
     <script>
-        // --- Variables defined inside DOMContentLoaded ---
-        let charts = {};
-        let loadingOverlay;
-        let dataStatusElement;
-        let uploadStatusElement;
-        let shipmentTableBody;
-        let metricsContainer;
-        // --- End Variable Definitions ---
+        // --- State Variables ---
+        let currentLanguage = 'en'; let currentUnit = 'lbs'; const kgConversionFactor = 0.453592; let charts = {}; let rawData = null;
 
-        function showLoading(message = "Loading...") {
-             // Add null check for loadingOverlay itself
-             if (!loadingOverlay) {
-                 console.error("showLoading called before loadingOverlay element is assigned.");
-                 return;
-             }
-             // Use the new selector for the message element
-             const messageElement = loadingOverlay.querySelector('.loading-message');
-             if (messageElement) { // Check if element was found
-                 messageElement.textContent = message;
-             } else {
-                 console.error("Could not find message element (.loading-message) within loading overlay.");
-                 // Fallback: maybe just show overlay without text? Or log error.
-             }
-             loadingOverlay.classList.add('visible');
+        // --- DOM Element References ---
+        let loadingOverlay, dataStatusElement, uploadStatusElement, shipmentTableBody, metricsContainer, languageToggle, unitToggle;
+
+        // --- Translations (Same as before) ---
+        const translations = {
+             en: { mainTitle: "D'ASCOLA SEAFOOD", subTitle: "Fish Dex", loading: "Loading...", langLabel: "Lang:", langEN: "EN", langPT: "PT", unitLabel: "Units:", unitLbs: "lbs", unitKg: "kg", controlsTitle: "Shipment Management", uploadLabel: "Upload Daily JSON", uploadButton: "Upload File", startDateLabel: "Start Date", endDateLabel: "End Date", reportTypeLabel: "Report Type", refreshButton: "Refresh Data", chartVolumeTitle: "Daily Shipment Volume", chartCustomersTitle: "Customer Count by Day", chartSpeciesTitle: "Species Distribution", chartTopCustomersTitle: "Top Customers", chartSwordfishTitle: "Avg. Swordfish Size/Box", tableTitle: "Shipment Details", tableColDate: "Date", tableColBoxes: "Boxes", tableColWeight: "Weight (lbs)", tableColCustCount: "Customers", tableColSpecies: "Species", metricBoxes: "Total Boxes", metricWeight: "Total Weight (lbs)", metricCustomers: "Unique Customers", metricSpecies: "Primary Species", metricAvgDay: "Avg /day", metricOverDays: "Over {days} day(s)", metricPercentWeight: "% of weight", shipmentDetailsTitle: "Shipment Details", detailColCustomer: "Customer", detailColCompany: "Company", detailColSpecies: "Species", detailColBoxes: "Boxes", detailColWeight: "Weight (lbs)", detailColCount: "Count", detailColNotes: "Notes", detailColAWB: "AWB", errorSelectDates: "Please select both start and end dates.", errorStartDateAfterEnd: "Start date cannot be after end date.", errorFetch: "Error fetching data: {message}", errorUpload: "Upload Error: {message}", errorInvalidData: "Error: Received invalid data structure from server.", statusLoading: "Loading data...", statusUploading: "Uploading file...", statusLoaded: "Data loaded successfully.", statusUploaded: "File uploaded.", statusNoData: "No shipment data found for the selected period.", statusFailedLoad: "Failed to load data.", statusInit: "Initializing...", statusNoDetails: "No details to show for {date}", statusNotModified: "Data not modified.", errorSelectFile: "Please select a file first", errorSelectJson: "Please select a JSON file (.json)", footerText: "D'Ascola Seafood Data Dashboard" },
+             pt: { mainTitle: "D'ASCOLA PESCADOS", subTitle: "Dex Do Peixe", loading: "Carregando...", langLabel: "Idioma:", langEN: "EN", langPT: "PT", unitLabel: "Unid:", unitLbs: "lbs", unitKg: "kg", controlsTitle: "Gerenciar Envios", uploadLabel: "Carregar JSON Diário", uploadButton: "Carregar Arquivo", startDateLabel: "Data Inicial", endDateLabel: "Data Final", reportTypeLabel: "Tipo Relatório", refreshButton: "Atualizar Dados", chartVolumeTitle: "Volume Diário de Envios", chartCustomersTitle: "Contagem de Clientes por Dia", chartSpeciesTitle: "Distribuição de Espécies", chartTopCustomersTitle: "Principais Clientes", chartSwordfishTitle: "Tam. Médio Espadarte/Caixa", tableTitle: "Detalhes dos Envios", tableColDate: "Data", tableColBoxes: "Caixas", tableColWeight: "Peso (kg)", tableColCustCount: "Clientes", tableColSpecies: "Espécies", metricBoxes: "Total Caixas", metricWeight: "Peso Total (kg)", metricCustomers: "Clientes Únicos", metricSpecies: "Espécie Principal", metricAvgDay: "Média /dia", metricOverDays: "Em {days} dia(s)", metricPercentWeight: "% do peso", shipmentDetailsTitle: "Detalhes do Envio", detailColCustomer: "Cliente", detailColCompany: "Empresa", detailColSpecies: "Espécie", detailColBoxes: "Caixas", detailColWeight: "Peso (kg)", detailColCount: "Qtd.", detailColNotes: "Notas", detailColAWB: "AWB", errorSelectDates: "Por favor, selecione as datas inicial e final.", errorStartDateAfterEnd: "Data inicial não pode ser após a data final.", errorFetch: "Erro ao buscar dados: {message}", errorUpload: "Erro no Upload: {message}", errorInvalidData: "Erro: Estrutura de dados inválida recebida do servidor.", statusLoading: "Carregando dados...", statusUploading: "Carregando arquivo...", statusLoaded: "Dados carregados com sucesso.", statusUploaded: "Arquivo carregado.", statusNoData: "Nenhum dado de envio encontrado para o período selecionado.", statusFailedLoad: "Falha ao carregar dados.", statusInit: "Inicializando...", statusNoDetails: "Sem detalhes para mostrar para {date}", statusNotModified: "Dados não modificados.", errorSelectFile: "Por favor, selecione um arquivo primeiro", errorSelectJson: "Por favor, selecione um arquivo JSON (.json)", footerText: "D'Ascola Pescados Painel de Dados" }
+        };
+
+        // --- Helper Functions --- ADDED MISSING DEFINITIONS ---
+        function getLangString(key, replacements = {}) { let str = translations[currentLanguage]?.[key] || translations.en[key] || key; for (const placeholder in replacements) { str = str.replace(`{${placeholder}}`, replacements[placeholder]); } return str; }
+
+        function updateUItext() {
+            document.querySelectorAll('[data-lang]').forEach(el => {
+                const key = el.getAttribute('data-lang');
+                // Avoid accidentally overwriting elements within the toggle switches
+                if (!el.closest('.toggle-switch') || el.tagName !== 'SPAN' || !['langEN', 'langPT', 'unitLbs', 'unitKg'].includes(key)) {
+                    el.textContent = getLangString(key);
+                }
+            });
+             // Specifically update the labels within the toggles
+             const langLabel = document.querySelector('.toggle-switch [data-lang="langLabel"]'); if (langLabel) langLabel.textContent = getLangString('langLabel');
+             const unitLabel = document.querySelector('.toggle-switch [data-lang="unitLabel"]'); if (unitLabel) unitLabel.textContent = getLangString('unitLabel');
+             // Update fixed text spans in toggles
+             const langEN = document.querySelector('.toggle-switch [data-lang="langEN"]'); if (langEN) langEN.textContent = getLangString('langEN');
+             const langPT = document.querySelector('.toggle-switch [data-lang="langPT"]'); if (langPT) langPT.textContent = getLangString('langPT');
+             const unitLbs = document.querySelector('.toggle-switch [data-lang="unitLbs"]'); if (unitLbs) unitLbs.textContent = getLangString('unitLbs');
+             const unitKg = document.querySelector('.toggle-switch [data-lang="unitKg"]'); if (unitKg) unitKg.textContent = getLangString('unitKg');
+
+            updateTableHeaders(); document.title = getLangString('mainTitle'); Object.values(charts).forEach(chart => { if(chart?.options?.plugins?.title?.text) { const titleKey = Object.keys(translations.en).find(k => translations.en[k] === chart.options.plugins.title.text || translations.pt[k] === chart.options.plugins.title.text); if(titleKey) { chart.options.plugins.title.text = getLangString(titleKey); chart.update('none'); } } }); if (rawData) { updateDashboard(rawData); }
         }
 
-        function hideLoading() {
-             if (loadingOverlay) { // Add null check
-                 loadingOverlay.classList.remove('visible');
-            }
+        function updateTableHeaders() {
+            const weightHead = document.querySelector('thead th[data-lang="tableColWeight"]');
+            if (weightHead) weightHead.textContent = `${getLangString('tableColWeight').replace(/\s\(.*\)/, '')} (${currentUnit})`;
+             // Update details header dynamically if details table exists
+             const detailsWeightHead = document.querySelector('.shipment-details th[data-lang="detailColWeight"]');
+             if(detailsWeightHead) detailsWeightHead.textContent = `${getLangString('detailColWeight').replace(/\s\(.*\)/, '')} (${currentUnit})`;
         }
 
-        // Initialize date range to last 7 days
+        function toggleLanguage() { currentLanguage = languageToggle.checked ? 'pt' : 'en'; localStorage.setItem('dashboardLanguage', currentLanguage); updateUItext(); }
+        function toggleUnits() { currentUnit = unitToggle.checked ? 'kg' : 'lbs'; localStorage.setItem('dashboardUnit', currentUnit); updateTableHeaders(); if (rawData) { updateDashboard(rawData); } }
+        function formatWeight(weightLbs) { if (weightLbs === undefined || weightLbs === null || isNaN(Number(weightLbs))) { return '-'; } const numericWeight = Number(weightLbs); if (currentUnit === 'kg') { return (numericWeight * kgConversionFactor).toLocaleString(undefined, { maximumFractionDigits: 1 }); } else { return numericWeight.toLocaleString(undefined, { maximumFractionDigits: 1 }); } }
+        function formatAvgWeight(weightLbs, boxes) { if (weightLbs === undefined || weightLbs === null || isNaN(Number(weightLbs)) || !boxes || Number(boxes) === 0) { return '-'; } const numericWeight = Number(weightLbs); const numericBoxes = Number(boxes); const avgLbs = numericWeight / numericBoxes; if (currentUnit === 'kg') { return (avgLbs * kgConversionFactor).toLocaleString(undefined, { maximumFractionDigits: 1 }); } else { return avgLbs.toLocaleString(undefined, { maximumFractionDigits: 1 }); } }
+        function showLoading(messageKey = "loading") { if (!loadingOverlay) return; const messageElement = loadingOverlay.querySelector('.loading-message'); if (messageElement) messageElement.textContent = getLangString(messageKey); loadingOverlay.classList.add('visible'); }
+        function hideLoading() { if (loadingOverlay) loadingOverlay.classList.remove('visible'); }
+        function formatDate(date) { return date.toISOString().split('T')[0]; }
+
+        // *** ADDED THIS MISSING FUNCTION ***
         function initializeDateRange() {
             const endDate = new Date();
             const startDate = new Date();
-            startDate.setDate(startDate.getDate() - 6); // Adjust to make it exactly 7 days including end date
-
-            // Check if elements exist before setting value (belt-and-suspenders)
+            startDate.setDate(startDate.getDate() - 6);
             const startDateInput = document.getElementById('startDate');
             const endDateInput = document.getElementById('endDate');
             if (startDateInput && endDateInput) {
                 startDateInput.value = formatDate(startDate);
                 endDateInput.value = formatDate(endDate);
             } else {
-                console.error("Could not find start or end date input elements.");
+                console.error("Could not find start or end date input elements during init.");
             }
         }
 
-        // Format date as YYYY-MM-DD
-        function formatDate(date) {
-            return date.toISOString().split('T')[0];
-        }
+        function destroyChart(chartId) { if (charts[chartId]) { try { charts[chartId].destroy(); } catch (e) { console.warn(`Could not destroy chart ${chartId}:`, e); } delete charts[chartId]; } const canvas = document.getElementById(chartId); if (canvas) { const ctx = canvas.getContext('2d'); ctx.clearRect(0, 0, canvas.width, canvas.height); } }
+        function clearAllCharts() { const chartIds = ['volumeChart', 'customerChart', 'speciesChart', 'topCustomersChart', 'swordfishChart']; chartIds.forEach(id => destroyChart(id)); }
+        function clearMetrics() { if (metricsContainer) { metricsContainer.innerHTML = ` <div class="metric-card"><div class="metric-value">-</div><div class="metric-label" data-lang="metricBoxes">${getLangString('metricBoxes')}</div><div class="metric-subtext">...</div></div> <div class="metric-card"><div class="metric-value">-</div><div class="metric-label" data-lang="metricWeight">${getLangString('metricWeight')}</div><div class="metric-subtext">...</div></div> <div class="metric-card"><div class="metric-value">-</div><div class="metric-label" data-lang="metricCustomers">${getLangString('metricCustomers')}</div><div class="metric-subtext">...</div></div> <div class="metric-card"><div class="metric-value">-</div><div class="metric-label" data-lang="metricSpecies">${getLangString('metricSpecies')}</div><div class="metric-subtext">...</div></div> `; } }
+        function clearTable() { if (shipmentTableBody) { shipmentTableBody.innerHTML = `<tr><td colspan="5" style="text-align: center;" data-lang="statusNoData">${getLangString('statusNoData')}</td></tr>`; } }
 
-        // Helper to destroy existing chart instance
-        function destroyChart(chartId) {
-            if (charts[chartId]) {
-                try {
-                    charts[chartId].destroy();
-                } catch (e) {
-                     console.warn(`Could not destroy chart ${chartId}:`, e);
-                }
-                delete charts[chartId];
-            }
-            // Clear the canvas content as fallback
-            const canvas = document.getElementById(chartId);
-             if (canvas) {
-                 const ctx = canvas.getContext('2d');
-                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-             }
-        }
-
-        // Clear all chart canvases
-        function clearAllCharts() {
-             const chartIds = ['volumeChart', 'customerChart', 'speciesChart', 'topCustomersChart', 'swordfishChart'];
-             chartIds.forEach(id => destroyChart(id));
-        }
-
-        // Clear metrics placeholders
-        function clearMetrics() {
-            // Add null check
-            if (metricsContainer) {
-                metricsContainer.innerHTML = `
-                    <div class="metric-card"><div class="metric-value">-</div><div class="metric-label">Total Boxes</div><div class="metric-subtext">No data</div></div>
-                    <div class="metric-card"><div class="metric-value">-</div><div class="metric-label">Total Weight</div><div class="metric-subtext">No data</div></div>
-                    <div class="metric-card"><div class="metric-value">-</div><div class="metric-label">Unique Customers</div><div class="metric-subtext">No data</div></div>
-                    <div class="metric-card"><div class="metric-value">-</div><div class="metric-label">Primary Species</div><div class="metric-subtext">No data</div></div>
-                `;
-            }
-        }
-
-        // Clear table content
-         function clearTable() {
-              // Add null check
-              if (shipmentTableBody) {
-                 shipmentTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No data loaded.</td></tr>';
-              }
-         }
-
-
-        // Fetch data from API
+        // --- Main Logic (fetchData, uploadFile, updateDashboard, updateMetrics, updateCharts, updateShipmentTable) ---
+        // (No changes needed here from previous version)
         async function fetchData() {
-            // Get elements within the function scope OR rely on globally assigned ones
-            const startDateInput = document.getElementById('startDate');
-            const endDateInput = document.getElementById('endDate');
-            const startDate = startDateInput ? startDateInput.value : null;
-            const endDate = endDateInput ? endDateInput.value : null;
-
-            // Use 'daily' report type for now, as backend delegates
-            const reportType = 'daily'; // document.getElementById('reportType').value;
-
-            // Check elements exist before accessing properties
-            if (!dataStatusElement) {
-                console.error("dataStatusElement not found");
-                return;
-            }
-
-            if (!startDate || !endDate) {
-                 dataStatusElement.innerHTML = `<span class="status-error">Please select both start and end dates.</span>`;
-                 return;
-            }
-            if (new Date(startDate) > new Date(endDate)) {
-                 dataStatusElement.innerHTML = `<span class="status-error">Start date cannot be after end date.</span>`;
-                 return;
-            }
-
-            showLoading("Fetching data...");
-            dataStatusElement.innerHTML = `<span class="status-info">Loading data...</span>`;
-            if (uploadStatusElement) uploadStatusElement.innerHTML = ''; // Clear upload status
-
-            // Clear previous data visually while loading
-            clearMetrics();
-            clearAllCharts();
-            clearTable();
-
-            try {
-                 // Construct URL - ensures parameters are encoded correctly
-                 const url = new URL(`/api/reports/${reportType}`, window.location.origin);
-                 url.searchParams.append('start_date', startDate);
-                 url.searchParams.append('end_date', endDate);
-
-                console.log("Fetching data from:", url.toString());
-                 // Added cache control based on previous discussion
-                const response = await fetch(url, { cache: 'no-cache' });
-
-                const responseText = await response.text(); // Get response text first for debugging
-
-                if (!response.ok) {
-                     // Handle 304 Not Modified specifically - treat as success but no data update needed?
-                     // Or better: rely on cache:'no-cache' to always get 200 or error
-                     if (response.status === 304) {
-                         console.warn("Received 304 Not Modified. Cache might be interfering despite 'no-cache'.");
-                         // Optionally update status but don't parse JSON
-                         dataStatusElement.innerHTML = `<span class="status-info">Data not modified.</span>`;
-                         hideLoading(); // Still hide loading
-                         return; // Exit function early
-                     }
-
-                     let errorDetail = 'Unknown server error';
-                     try {
-                         const errorData = JSON.parse(responseText);
-                         errorDetail = errorData.detail || JSON.stringify(errorData);
-                     } catch (e) {
-                          errorDetail = responseText.substring(0, 200); // Show first part of non-JSON error
-                     }
-                     console.error('API Error Response Text:', responseText);
-                    throw new Error(`Failed: ${response.status} ${response.statusText} - ${errorDetail}`);
-                }
-
-                const data = JSON.parse(responseText); // Parse JSON only if response is OK (not 304)
-                console.log("Data received:", data);
-                updateDashboard(data);
-                dataStatusElement.innerHTML = `<span class="status-success">Data loaded successfully.</span>`;
-
-            } catch (error) {
-                console.error('Error fetching data:', error);
-                 if (dataStatusElement) { // Check again before setting error message
-                     dataStatusElement.innerHTML = `<span class="status-error">Error: ${error.message}</span>`;
-                 }
-                // Ensure UI is cleared on error
-                clearMetrics();
-                clearAllCharts();
-                clearTable();
-                 if (shipmentTableBody) { // Check element
-                     shipmentTableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--error-color);">Failed to load data.</td></tr>`;
-                 }
-            } finally {
-                hideLoading();
-            }
+             const startDateInput = document.getElementById('startDate'); const endDateInput = document.getElementById('endDate'); const startDate = startDateInput ? startDateInput.value : null; const endDate = endDateInput ? endDateInput.value : null; const reportType = 'daily';
+             if (!dataStatusElement) { console.error("dataStatusElement not found"); return; }
+             if (!startDate || !endDate) { dataStatusElement.innerHTML = `<span class="status-error">${getLangString('errorSelectDates')}</span>`; return; }
+             if (new Date(startDate) > new Date(endDate)) { dataStatusElement.innerHTML = `<span class="status-error">${getLangString('errorStartDateAfterEnd')}</span>`; return; }
+             showLoading("statusLoading"); dataStatusElement.innerHTML = `<span class="status-info">${getLangString('statusLoading')}</span>`; if (uploadStatusElement) uploadStatusElement.innerHTML = '';
+             clearMetrics(); clearAllCharts(); clearTable();
+             try {
+                 const url = new URL(`/api/reports/${reportType}`, window.location.origin); url.searchParams.append('start_date', startDate); url.searchParams.append('end_date', endDate);
+                 console.log("Fetching data from:", url.toString()); const response = await fetch(url, { cache: 'no-cache' }); const responseText = await response.text();
+                 if (!response.ok) { let errorDetail = 'Unknown server error'; try { errorDetail = JSON.parse(responseText).detail || responseText; } catch (e) { errorDetail = responseText.substring(0,100); } throw new Error(getLangString('errorFetch', { message: `${response.status} - ${errorDetail}` })); }
+                 rawData = JSON.parse(responseText); console.log("Data received:", rawData); updateDashboard(rawData); dataStatusElement.innerHTML = `<span class="status-success">${getLangString('statusLoaded')}</span>`;
+             } catch (error) {
+                 console.error('Error fetching data:', error); rawData = null; if (dataStatusElement) dataStatusElement.innerHTML = `<span class="status-error">${error.message}</span>`;
+                 clearMetrics(); clearAllCharts(); clearTable(); if (shipmentTableBody) shipmentTableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--error-color);">${getLangString('statusFailedLoad')}</td></tr>`;
+             } finally { hideLoading(); }
         }
-
-        // Upload JSON file
-        async function uploadFile() {
-            const fileInput = document.getElementById('fileUpload');
-            const uploadButton = document.getElementById('uploadButton');
-
-            // Check elements exist
-            if (!uploadStatusElement) { console.error("uploadStatusElement not found"); return; }
-            if (!fileInput) { console.error("fileInput not found"); return; }
-            if (!uploadButton) { console.error("uploadButton not found"); return; }
-
-
-            if (!fileInput.files || fileInput.files.length === 0) {
-                uploadStatusElement.innerHTML = '<span class="status-error">Please select a file first</span>';
-                return;
-            }
-
-            const file = fileInput.files[0];
-            // Basic check, server does the main validation
-            if (!file.name.toLowerCase().endsWith('.json')) {
-                uploadStatusElement.innerHTML = '<span class="status-error">Please select a JSON file (.json)</span>';
-                return;
-            }
-
-            showLoading("Uploading file...");
-            uploadStatusElement.innerHTML = '<span class="status-info">Uploading...</span>';
-             if (dataStatusElement) dataStatusElement.innerHTML = ''; // Clear data status
-            uploadButton.disabled = true; // Disable button during upload
-
-
-            const formData = new FormData();
-            formData.append('file', file);
-
-            try {
-                const response = await fetch('/api/upload/daily', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                const result = await response.json(); // Assume server always returns JSON, even for errors
-
-                if (!response.ok) {
-                     console.error('Upload Error Response:', result);
-                    throw new Error(`Upload failed: ${response.status} - ${result.detail || JSON.stringify(result) || 'Server error'}`);
-                }
-
-                console.log("Upload successful:", result);
-                uploadStatusElement.innerHTML = `<span class="status-success">${result.message || 'File uploaded.'}</span>`;
-                fileInput.value = ''; // Clear the file input
-
-                // Refresh data after successful upload
-                await fetchData(); // Wait for data refresh to complete
-
-            } catch (error) {
-                console.error('Error uploading file:', error);
-                uploadStatusElement.innerHTML = `<span class="status-error">Upload Error: ${error.message}</span>`;
-                 // Don't clear data on upload error, just show the error
-            } finally {
-                 hideLoading();
-                 uploadButton.disabled = false; // Re-enable button
-            }
+         async function uploadFile() {
+             const fileInput = document.getElementById('fileUpload'); const uploadButton = document.getElementById('uploadButton'); if (!uploadStatusElement || !fileInput || !uploadButton) return;
+             if (!fileInput.files || fileInput.files.length === 0) { uploadStatusElement.innerHTML = `<span class="status-error">${getLangString('errorSelectFile')}</span>`; return; } const file = fileInput.files[0]; if (!file.name.toLowerCase().endsWith('.json')) { uploadStatusElement.innerHTML = `<span class="status-error">${getLangString('errorSelectJson')}</span>`; return; }
+             showLoading("statusUploading"); uploadStatusElement.innerHTML = `<span class="status-info">${getLangString('statusUploading')}</span>`; if (dataStatusElement) dataStatusElement.innerHTML = ''; uploadButton.disabled = true;
+             const formData = new FormData(); formData.append('file', file);
+             try {
+                 const response = await fetch('/api/upload/daily', { method: 'POST', body: formData }); const result = await response.json(); if (!response.ok) throw new Error(getLangString('errorUpload', { message: `${response.status} - ${result.detail || 'Server error'}` }));
+                 console.log("Upload successful:", result); uploadStatusElement.innerHTML = `<span class="status-success">${getLangString('statusUploaded')}</span>`; fileInput.value = ''; await fetchData();
+             } catch (error) { console.error('Error uploading file:', error); uploadStatusElement.innerHTML = `<span class="status-error">${error.message}</span>`; } finally { hideLoading(); uploadButton.disabled = false; }
         }
-
-        // Update metrics cards (function content remains the same)
-        function updateMetrics(data) {
-             if (!metricsContainer) { console.error("metricsContainer not found."); return; }
-             metricsContainer.innerHTML = ''; // Clear previous metrics
-
-            const dailyData = data?.dailyData || [];
-
-            // Calculate summary metrics
-            let totalBoxes = 0;
-            let totalWeight = 0;
-            dailyData.forEach(day => {
-                totalBoxes += Number(day.boxes) || 0;
-                totalWeight += Number(day.weight) || 0;
-            });
-
-            const numDays = dailyData.length;
-            const avgBoxesPerDay = numDays > 0 ? totalBoxes / numDays : 0;
-            const avgWeightPerDay = numDays > 0 ? totalWeight / numDays : 0;
-
-            // Count unique customers accurately from shipments
-            const allCustomers = new Set();
-             dailyData.forEach(day => {
-                 (day.shipments || []).forEach(shipment => {
-                     const company = shipment?.company?.trim();
-                     if (company && company !== "Unknown") {
-                         allCustomers.add(company);
-                     }
-                 });
-             });
-             const uniqueCustomers = allCustomers.size;
-
-
-            // Get primary species from aggregated data
-            const speciesData = data?.speciesData || [];
-            let mainSpecies = 'N/A';
-            let mainSpeciesPercent = '0';
-            let totalSpeciesWeight = speciesData.reduce((sum, s) => sum + (Number(s.value) || 0), 0);
-
-            if (speciesData.length > 0 && speciesData[0].value > 0) {
-                const topSpecies = speciesData[0];
-                mainSpecies = topSpecies.name || 'N/A';
-                // Use overall total weight for percentage if available and makes sense, otherwise use sum of species weights
-                const denominator = totalWeight > 0 ? totalWeight : totalSpeciesWeight;
-                 mainSpeciesPercent = denominator > 0
-                     ? (( (Number(topSpecies.value) || 0) / denominator) * 100).toFixed(1)
-                     : '0';
-            }
-
-            // Create metric cards
-            const metrics = [
-                { label: 'Total Boxes', value: totalBoxes.toLocaleString(), subtext: `Avg ${avgBoxesPerDay.toLocaleString(undefined, {maximumFractionDigits: 1})}/day` },
-                { label: 'Total Weight (lbs)', value: totalWeight.toLocaleString(undefined, {maximumFractionDigits: 1}), subtext: `Avg ${avgWeightPerDay.toLocaleString(undefined, {maximumFractionDigits: 1})}/day` },
-                { label: 'Unique Customers', value: uniqueCustomers.toLocaleString(), subtext: `Over ${numDays} day(s)` },
-                { label: 'Primary Species', value: mainSpecies, subtext: `${mainSpeciesPercent}% of weight` }
-            ];
-
-            metrics.forEach(metric => {
-                const card = document.createElement('div');
-                card.className = 'metric-card';
-                card.innerHTML = `
-                    <div class="metric-value">${metric.value}</div>
-                    <div class="metric-label">${metric.label}</div>
-                    <div class="metric-subtext">${metric.subtext}</div>
-                `;
-                metricsContainer.appendChild(card);
-            });
+         function updateMetrics(data) {
+             if (!metricsContainer || !data?.dailyData) { clearMetrics(); return; } metricsContainer.innerHTML = ''; const dailyData = data.dailyData; let totalBoxes = 0, totalWeightLbs = 0; dailyData.forEach(day => { totalBoxes += Number(day.boxes) || 0; totalWeightLbs += Number(day.weight) || 0; }); const numDays = dailyData.length; const avgBoxesPerDay = numDays > 0 ? totalBoxes / numDays : 0; const avgWeightLbsPerDay = numDays > 0 ? totalWeightLbs / numDays : 0; const allCustomers = new Set(); dailyData.forEach(day => { (day.shipments || []).forEach(shipment => { if (shipment?.company?.trim() && shipment.company !== "Unknown") allCustomers.add(shipment.company.trim()); }); }); const uniqueCustomers = allCustomers.size; const speciesData = data?.speciesData || []; let mainSpecies = 'N/A', mainSpeciesPercent = '0'; let totalSpeciesWeightLbs = speciesData.reduce((sum, s) => sum + (Number(s.value) || 0), 0); if (speciesData.length > 0 && speciesData[0].value > 0) { const topSpecies = speciesData[0]; mainSpecies = topSpecies.name || 'N/A'; const denominator = totalWeightLbs > 0 ? totalWeightLbs : totalSpeciesWeightLbs; mainSpeciesPercent = denominator > 0 ? (((Number(topSpecies.value) || 0) / denominator) * 100).toFixed(1) : '0'; }
+             const metrics = [ { key: 'metricBoxes', value: totalBoxes.toLocaleString(), subtext: `${getLangString('metricAvgDay')} ${avgBoxesPerDay.toLocaleString(undefined, {maximumFractionDigits: 1})}` }, { key: 'metricWeight', value: formatWeight(totalWeightLbs), subtext: `${getLangString('metricAvgDay')} ${formatWeight(avgWeightLbsPerDay)}` }, { key: 'metricCustomers', value: uniqueCustomers.toLocaleString(), subtext: getLangString('metricOverDays', {days: numDays}) }, { key: 'metricSpecies', value: mainSpecies, subtext: `${mainSpeciesPercent}${getLangString('metricPercentWeight')}` } ];
+             metrics.forEach(metric => { const card = document.createElement('div'); card.className = 'metric-card'; card.innerHTML = `<div class="metric-value">${metric.value}</div> <div class="metric-label">${getLangString(metric.key)}</div> <div class="metric-subtext">${metric.subtext}</div>`; metricsContainer.appendChild(card); });
         }
-
-        // Update charts (function content remains the same)
         function updateCharts(data) {
-            const dailyData = data?.dailyData || [];
-            const speciesData = data?.speciesData || [];
-            const customerData = data?.customerData || []; // Already limited to top 5 by backend
-            const swordData = data?.swordData || [];
-
-            // Chart colors from CSS variables
-            const colors = [
-                getComputedStyle(document.documentElement).getPropertyValue('--chart-color-1').trim(),
-                getComputedStyle(document.documentElement).getPropertyValue('--chart-color-2').trim(),
-                getComputedStyle(document.documentElement).getPropertyValue('--chart-color-3').trim(),
-                getComputedStyle(document.documentElement).getPropertyValue('--chart-color-4').trim(),
-                getComputedStyle(document.documentElement).getPropertyValue('--chart-color-5').trim(),
-                getComputedStyle(document.documentElement).getPropertyValue('--chart-color-6').trim()
-             ];
-
-
-            // Destroy previous charts before creating new ones
-            clearAllCharts();
-
-
-            // --- Daily Volume Chart ---
-            if (dailyData.length > 0) {
-                const volumeCtx = document.getElementById('volumeChart').getContext('2d');
-                charts['volumeChart'] = new Chart(volumeCtx, {
-                    type: 'line',
-                    data: {
-                        labels: dailyData.map(day => day.date || 'N/A'),
-                        datasets: [
-                            {
-                                label: 'Boxes',
-                                data: dailyData.map(day => Number(day.boxes) || 0),
-                                borderColor: colors[0],
-                                backgroundColor: colors[0] + '1A', // Add alpha for fill
-                                yAxisID: 'y',
-                                tension: 0.1 // Slight curve
-                            },
-                            {
-                                label: 'Weight (lbs)',
-                                data: dailyData.map(day => Number(day.weight) || 0),
-                                borderColor: colors[1],
-                                backgroundColor: colors[1] + '1A', // Add alpha for fill
-                                yAxisID: 'y1',
-                                tension: 0.1 // Slight curve
-                            }
-                        ]
-                    },
-                    options: {
-                        responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
-                        scales: {
-                            x: { title: { display: true, text: 'Date' } },
-                            y: { type: 'linear', position: 'left', title: { display: true, text: 'Boxes' }, beginAtZero: true },
-                            y1: { type: 'linear', position: 'right', title: { display: true, text: 'Weight (lbs)' }, grid: { drawOnChartArea: false }, beginAtZero: true }
-                        },
-                        plugins: { tooltip: { mode: 'index', intersect: false } }
-                    }
-                });
-            }
-
-             // --- Customer Count Chart ---
-             if (dailyData.length > 0) {
-                const customerCtx = document.getElementById('customerChart').getContext('2d');
-                charts['customerChart'] = new Chart(customerCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: dailyData.map(day => day.date || 'N/A'),
-                        datasets: [{
-                            label: 'Customer Count',
-                            data: dailyData.map(day => Number(day.customers) || 0),
-                            backgroundColor: colors[2]
-                        }]
-                    },
-                    options: {
-                        responsive: true, maintainAspectRatio: false,
-                         scales: {
-                             x: { title: { display: true, text: 'Date' } },
-                             y: { beginAtZero: true, title: { display: true, text: 'Number of Customers'}, ticks: { stepSize: 1 } } // Ensure integer ticks
-                         }
-                    }
-                });
-             }
-
-            // --- Species Distribution Chart ---
-             if (speciesData.length > 0) {
-                const speciesCtx = document.getElementById('speciesChart').getContext('2d');
-                charts['speciesChart'] = new Chart(speciesCtx, {
-                    type: 'doughnut', // Doughnut often looks cleaner than Pie
-                    data: {
-                        labels: speciesData.map(species => species.name || 'Unknown'),
-                        datasets: [{
-                            data: speciesData.map(species => Number(species.value) || 0),
-                            backgroundColor: speciesData.map((_, i) => colors[i % colors.length]),
-                            borderColor: '#fff', // White border between segments
-                            borderWidth: 2 // Slightly thicker border
-                        }]
-                    },
-                    options: {
-                        responsive: true, maintainAspectRatio: false,
-                        plugins: {
-                            legend: { position: 'bottom', labels: { padding: 20 } },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        const value = Number(context.raw) || 0;
-                                        const total = context.dataset.data.reduce((a, b) => (Number(a) || 0) + (Number(b) || 0), 0);
-                                        const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
-                                        return ` ${context.label}: ${value.toLocaleString(undefined, {maximumFractionDigits: 1})} lbs (${percentage}%)`;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-             }
-
-            // --- Top Customers Chart ---
-            if (customerData.length > 0) {
-                const topCustomersCtx = document.getElementById('topCustomersChart').getContext('2d');
-                charts['topCustomersChart'] = new Chart(topCustomersCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: customerData.map(customer => customer.name || 'Unknown'),
-                        datasets: [{
-                            label: 'Weight (lbs)',
-                            data: customerData.map(customer => Number(customer.value) || 0),
-                            backgroundColor: colors[3]
-                        }]
-                    },
-                    options: {
-                        responsive: true, maintainAspectRatio: false, indexAxis: 'y', // Horizontal bars
-                        scales: {
-                             x: { beginAtZero: true, title: { display: true, text: 'Total Weight (lbs)'} },
-                             y: { title: { display: false } } // Title often redundant with horizontal labels
-                         },
-                         plugins: { legend: { display: false } } // Legend often redundant for single dataset bar chart
-                    }
-                });
-            }
-
-            // --- Swordfish Size Chart ---
-            if (swordData.length > 0) {
-                const swordfishCtx = document.getElementById('swordfishChart').getContext('2d');
-                charts['swordfishChart'] = new Chart(swordfishCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: swordData.map(data => data.name || 'Unknown'),
-                        datasets: [{
-                            label: 'Avg Size per Box (lbs)',
-                            data: swordData.map(data => Number(data.avgSize) || 0),
-                            backgroundColor: colors[4]
-                        }]
-                    },
-                     options: {
-                        responsive: true, maintainAspectRatio: false,
-                        scales: {
-                             x: { title: { display: true, text: 'Customer (First Name)' } },
-                             y: { beginAtZero: true, title: { display: true, text: 'Avg Weight/Box (lbs)'} }
-                         },
-                         plugins: { legend: { display: false } }
-                    }
-                });
-             }
+             const dailyData = data?.dailyData || []; const speciesData = data?.speciesData || []; const customerData = data?.customerData || []; const swordData = data?.swordData || []; const colors = ['var(--chart-color-1)', 'var(--chart-color-2)', 'var(--chart-color-3)', 'var(--chart-color-4)', 'var(--chart-color-5)', 'var(--chart-color-6)']; clearAllCharts(); const weightUnitLabel = `(${currentUnit})`; const weightConversion = currentUnit === 'kg' ? kgConversionFactor : 1;
+             if (dailyData.length > 0) { const volCtx = document.getElementById('volumeChart').getContext('2d'); charts['volumeChart'] = new Chart(volCtx, { type: 'line', data: { labels: dailyData.map(d => d.date || 'N/A'), datasets: [ { label: getLangString('tableColBoxes'), data: dailyData.map(d => Number(d.boxes) || 0), borderColor: colors[0], backgroundColor: colors[0] + '20', yAxisID: 'y', tension: 0.1 }, { label: `${getLangString('tableColWeight').replace(/\s\(.*\)/, '')} ${weightUnitLabel}`, data: dailyData.map(d => (Number(d.weight) || 0) * weightConversion), borderColor: colors[1], backgroundColor: colors[1] + '20', yAxisID: 'y1', tension: 0.1 } ] }, options: { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false }, scales: { x: { title: { display: true, text: getLangString('tableColDate') } }, y: { title: { display: true, text: getLangString('tableColBoxes')}, beginAtZero: true }, y1: { position: 'right', grid: { drawOnChartArea: false }, title: { display: true, text: `${getLangString('tableColWeight').replace(/\s\(.*\)/, '')} ${weightUnitLabel}` }, beginAtZero: true } }, plugins: { title: { display: true, text: getLangString('chartVolumeTitle') }, tooltip: { mode: 'index', intersect: false } } } }); }
+             if (dailyData.length > 0) { const custCtx = document.getElementById('customerChart').getContext('2d'); charts['customerChart'] = new Chart(custCtx, { type: 'bar', data: { labels: dailyData.map(d => d.date || 'N/A'), datasets: [{ label: getLangString('tableColCustCount'), data: dailyData.map(d => Number(d.customers) || 0), backgroundColor: colors[2] }] }, options: { responsive: true, maintainAspectRatio: false, scales: { x: { title: { display: true, text: getLangString('tableColDate') } }, y: { beginAtZero: true, title: { display: true, text: getLangString('tableColCustCount') }, ticks: { stepSize: 1 } } }, plugins: { title: { display: true, text: getLangString('chartCustomersTitle') }, legend: { display: false } } } }); }
+             if (speciesData.length > 0) { const specCtx = document.getElementById('speciesChart').getContext('2d'); charts['speciesChart'] = new Chart(specCtx, { type: 'doughnut', data: { labels: speciesData.map(s => s.name || 'Unknown'), datasets: [{ data: speciesData.map(s => (Number(s.value) || 0) * weightConversion), backgroundColor: speciesData.map((_, i) => colors[i % colors.length]), borderColor: '#fff', borderWidth: 2 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: `${getLangString('chartSpeciesTitle')} ${weightUnitLabel}` }, legend: { position: 'bottom', labels: { padding: 15 } }, tooltip: { callbacks: { label: (ctx) => { const v = Number(ctx.raw)||0; const t = ctx.chart.getDatasetMeta(0).total||1; const p = ((v/t)*100).toFixed(1); return ` ${ctx.label}: ${v.toLocaleString(undefined,{maximumFractionDigits:1})} ${currentUnit} (${p}%)`; } } } } } }); }
+             if (customerData.length > 0) { const topCtx = document.getElementById('topCustomersChart').getContext('2d'); charts['topCustomersChart'] = new Chart(topCtx, { type: 'bar', data: { labels: customerData.map(c => c.name || 'Unknown'), datasets: [{ label: `${getLangString('tableColWeight').replace(/\s\(.*\)/, '')} ${weightUnitLabel}`, data: customerData.map(c => (Number(c.value) || 0) * weightConversion), backgroundColor: colors[3] }] }, options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', scales: { x: { beginAtZero: true, title: { display: true, text: `${getLangString('tableColWeight').replace(/\s\(.*\)/, '')} ${weightUnitLabel}` } }, y: { title: { display: false } } }, plugins: { title: { display: true, text: getLangString('chartTopCustomersTitle') }, legend: { display: false } } } }); }
+             if (swordData.length > 0) { const swCtx = document.getElementById('swordfishChart').getContext('2d'); charts['swordfishChart'] = new Chart(swCtx, { type: 'bar', data: { labels: swordData.map(d => d.name || 'Unknown'), datasets: [{ label: `Avg Size/Box ${weightUnitLabel}`, data: swordData.map(d => (Number(d.avgSize) || 0) * weightConversion), backgroundColor: colors[4] }] }, options: { responsive: true, maintainAspectRatio: false, scales: { x: { title: { display: true, text: getLangString('detailColCustomer') } }, y: { beginAtZero: true, title: { display: true, text: `Avg Wt/Box ${weightUnitLabel}` } } }, plugins: { title: { display: true, text: getLangString('chartSwordfishTitle') }, legend: { display: false } } } }); }
         }
-
-        // Update shipment table (function content remains the same)
-        function updateShipmentTable(data) {
-             if (!shipmentTableBody) { console.error("shipmentTableBody not found."); return; }
-             shipmentTableBody.innerHTML = ''; // Clear previous content
-
-            const dailyData = data?.dailyData || [];
-
-            if (dailyData.length === 0) {
-                 shipmentTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No shipment data found for the selected period.</td></tr>';
-                 return;
-            }
-
-            dailyData.forEach((day, index) => {
-                // Create row for day summary
-                const row = document.createElement('tr');
-                row.className = 'shipment-row';
-                row.dataset.index = index; // Use index for linking
-                row.setAttribute('aria-expanded', 'false'); // Accessibility
-                row.setAttribute('aria-controls', `details-${index}`);
-
-                // Determine species string safely
-                 let speciesString = 'N/A';
-                 if (day && day.species && typeof day.species === 'object' && Object.keys(day.species).length > 0) {
-                     speciesString = Object.keys(day.species).join(', ');
-                 }
-
-                 // Use Number() for safe conversion and toLocaleString for formatting
-                row.innerHTML = `
-                    <td>${day?.date || 'N/A'}</td>
-                    <td>${(Number(day?.boxes) || 0).toLocaleString()}</td>
-                    <td>${(Number(day?.weight) || 0).toLocaleString(undefined, {maximumFractionDigits: 1})}</td>
-                    <td>${(Number(day?.customers) || 0).toLocaleString()}</td>
-                    <td>${speciesString}</td>
-                `;
-                shipmentTableBody.appendChild(row);
-
-                // Create hidden row for shipment details
-                const shipments = day?.shipments;
-                if (Array.isArray(shipments) && shipments.length > 0) {
-                    const detailsRow = document.createElement('tr');
-                    detailsRow.className = 'shipment-details'; // Initially hidden by CSS
-                    detailsRow.id = `details-${index}`;
-                    detailsRow.setAttribute('role', 'region');
-
-                    const detailsCell = document.createElement('td');
-                    detailsCell.colSpan = 5; // Span all columns
-
-                    let detailsHtml = `
-                        <div style="padding: 10px;"> <!-- Inner padding -->
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Customer</th>
-                                    <th>Company</th>
-                                    <th>Species</th>
-                                    <th>Boxes</th>
-                                    <th>Weight (lbs)</th>
-                                    <th>Count</th>
-                                    <th>Notes</th>
-                                </tr>
-                            </thead>
-                            <tbody>`;
-
-                    shipments.forEach(shipment => {
-                         const weightDisplay = (shipment?.weight_lbs !== undefined && shipment?.weight_lbs !== null)
-                             ? (Number(shipment.weight_lbs) || 0).toLocaleString(undefined, {maximumFractionDigits: 1})
-                             : '-';
-                        detailsHtml += `
-                            <tr>
-                                <td>${shipment?.customer_name || '-'}</td>
-                                <td>${shipment?.company || '-'}</td>
-                                <td>${shipment?.species || '-'}</td>
-                                <td>${(Number(shipment?.boxes) || 0).toLocaleString() || '-'}</td>
-                                <td>${weightDisplay}</td>
-                                <td>${shipment?.count || '-'}</td>
-                                <td>${shipment?.notes || '-'}</td>
-                            </tr>`;
-                    });
-
-                    detailsHtml += `</tbody></table></div>`;
-                    detailsCell.innerHTML = detailsHtml;
-                    detailsRow.appendChild(detailsCell);
-                    shipmentTableBody.appendChild(detailsRow);
-
-                    // Add click listener to the summary row
-                    row.addEventListener('click', function() {
-                        const details = document.getElementById(`details-${this.dataset.index}`);
-                        if (details) {
-                             const isExpanded = this.getAttribute('aria-expanded') === 'true';
-                             this.setAttribute('aria-expanded', !isExpanded);
-                             details.style.display = isExpanded ? 'none' : 'table-row';
-                        }
-                    });
-
-                } else {
-                    // Add listener even if no details, but do nothing visually
-                     row.addEventListener('click', function() {
-                         console.log(`No details to show for ${day?.date}`);
-                         // Optionally add a visual cue it's not expandable
-                         this.style.cursor = 'default';
-                     });
-                }
-            });
+         function updateShipmentTable(data) {
+             if (!shipmentTableBody || !data?.dailyData) { clearTable(); return; } shipmentTableBody.innerHTML = ''; const dailyData = data.dailyData; if (dailyData.length === 0) { shipmentTableBody.innerHTML = `<tr><td colspan="5" style="text-align: center;">${getLangString('statusNoData')}</td></tr>`; return; }
+             dailyData.forEach((day, index) => { const row = document.createElement('tr'); row.className = 'shipment-row'; row.dataset.index = index; row.setAttribute('aria-expanded', 'false'); row.setAttribute('aria-controls', `details-${index}`); let speciesString = 'N/A'; if (day?.species && typeof day.species === 'object') { const keys = Object.keys(day.species); if (keys.length > 0) speciesString = keys.join(', '); }
+                 row.innerHTML = `<td>${day?.date || 'N/A'}</td><td>${(Number(day?.boxes) || 0).toLocaleString()}</td><td>${formatWeight(day?.weight)}</td><td>${(Number(day?.customers) || 0).toLocaleString()}</td><td>${speciesString}</td>`; shipmentTableBody.appendChild(row);
+                 const shipments = day?.shipments; if (Array.isArray(shipments) && shipments.length > 0) { const detailsRow = document.createElement('tr'); detailsRow.className = 'shipment-details'; detailsRow.id = `details-${index}`; detailsRow.setAttribute('role', 'region'); const detailsCell = document.createElement('td'); detailsCell.colSpan = 5; let detailsHtml = `<div style="padding: 10px;"> <table> <thead> <tr> <th data-lang="detailColCustomer">${getLangString('detailColCustomer')}</th> <th data-lang="detailColCompany">${getLangString('detailColCompany')}</th> <th data-lang="detailColSpecies">${getLangString('detailColSpecies')}</th> <th data-lang="detailColBoxes">${getLangString('detailColBoxes')}</th> <th data-lang="detailColWeight">${getLangString('detailColWeight')} (${currentUnit})</th> <th data-lang="detailColCount">${getLangString('detailColCount')}</th> <th data-lang="detailColNotes">${getLangString('detailColNotes')}</th> <th class="col-awb" data-lang="detailColAWB">${getLangString('detailColAWB')}</th> </tr> </thead> <tbody>`; shipments.forEach(shipment => { detailsHtml += `<tr> <td>${shipment?.customer_name || '-'}</td> <td>${shipment?.company || '-'}</td> <td>${shipment?.species || '-'}</td> <td>${(Number(shipment?.boxes) || 0).toLocaleString() || '-'}</td> <td>${formatWeight(shipment?.weight_lbs)}</td> <td>${shipment?.count || '-'}</td> <td>${shipment?.notes || '-'}</td> <td class="col-awb">${shipment?.awb_number || '-'}</td> </tr>`; }); detailsHtml += `</tbody></table></div>`; detailsCell.innerHTML = detailsHtml; detailsRow.appendChild(detailsCell); shipmentTableBody.appendChild(detailsRow); row.addEventListener('click', function() { const details = document.getElementById(`details-${this.dataset.index}`); if (details) { const isExpanded = this.getAttribute('aria-expanded') === 'true'; this.setAttribute('aria-expanded', !isExpanded); details.style.display = isExpanded ? 'none' : 'table-row'; } }); } else { row.addEventListener('click', () => console.log(getLangString('statusNoDetails', {date: day?.date}))); row.style.cursor = 'default'; } });
         }
+         function updateDashboard(data) { if (!data || typeof data !== 'object' || !Array.isArray(data.dailyData)) { console.error("Invalid data structure:", data); if (dataStatusElement) dataStatusElement.innerHTML = `<span class="status-error">${getLangString('errorInvalidData')}</span>`; clearMetrics(); clearAllCharts(); clearTable(); return; } updateMetrics(data); updateCharts(data); updateShipmentTable(data); }
 
-        // Update dashboard with new data
-        function updateDashboard(data) {
-            // Basic validation of received data structure
-             if (!data || typeof data !== 'object' || !Array.isArray(data.dailyData)) {
-                 console.error("Invalid data structure received for dashboard update:", data);
-                 // Check if element exists before showing error
-                 if (dataStatusElement) {
-                    dataStatusElement.innerHTML = `<span class="status-error">Error: Received invalid data structure from server.</span>`;
-                 }
-                 clearMetrics();
-                 clearAllCharts();
-                 clearTable();
-                 return;
-             }
-            updateMetrics(data);
-            updateCharts(data);
-            updateShipmentTable(data);
-        }
-
-        // Initialize dashboard
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log("DOM fully loaded and parsed");
-
-            // --- Assign global variables AFTER DOM is loaded ---
-            loadingOverlay = document.getElementById('loadingOverlay');
-            dataStatusElement = document.getElementById('dataStatus');
-            uploadStatusElement = document.getElementById('uploadStatus');
-            shipmentTableBody = document.getElementById('shipmentTableBody');
-            metricsContainer = document.getElementById('metrics');
-            // --- End Assignment ---
-
-
-            // Check if elements were found (optional debug)
-            if (!loadingOverlay) console.error("loadingOverlay not found after DOM load");
-            if (!dataStatusElement) console.error("dataStatusElement not found after DOM load");
-            // etc.
-
-            // Set date range
-            initializeDateRange();
-
-            // Add event listeners (check if buttons exist first)
-            const uploadButton = document.getElementById('uploadButton');
-            const refreshButton = document.getElementById('refreshButton');
-            const startDateInput = document.getElementById('startDate');
-            const endDateInput = document.getElementById('endDate');
-
-            if (uploadButton) uploadButton.addEventListener('click', uploadFile);
-            else console.error("uploadButton not found");
-
-            if (refreshButton) refreshButton.addEventListener('click', fetchData);
-            else console.error("refreshButton not found");
-
-            if (startDateInput) startDateInput.addEventListener('change', fetchData);
-            else console.error("startDate input not found");
-
-            if (endDateInput) endDateInput.addEventListener('change', fetchData);
-            else console.error("endDate input not found");
-
-            // Load initial data
-            console.log("Fetching initial data...");
-            fetchData();
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+             console.log("DOM fully loaded");
+             // Assign elements
+             loadingOverlay = document.getElementById('loadingOverlay'); dataStatusElement = document.getElementById('dataStatus'); uploadStatusElement = document.getElementById('uploadStatus'); shipmentTableBody = document.getElementById('shipmentTableBody'); metricsContainer = document.getElementById('metrics'); languageToggle = document.getElementById('languageToggle'); unitToggle = document.getElementById('unitToggle');
+             // Restore preferences
+             const savedLang = localStorage.getItem('dashboardLanguage'); const savedUnit = localStorage.getItem('dashboardUnit'); if (savedLang === 'pt' && languageToggle) languageToggle.checked = true; if (savedUnit === 'kg' && unitToggle) unitToggle.checked = true; currentLanguage = languageToggle?.checked ? 'pt' : 'en'; currentUnit = unitToggle?.checked ? 'kg' : 'lbs';
+             // Initial UI Text Update
+             updateUItext();
+             if (!loadingOverlay || !dataStatusElement || !uploadStatusElement || !shipmentTableBody || !metricsContainer || !languageToggle || !unitToggle) { console.error("One or more essential DOM elements not found on init!"); if(dataStatusElement) dataStatusElement.innerHTML = `<span class="status-error">UI Error: Init failed.</span>`; return; }
+             // Initialize date range *AFTER* helper functions are defined
+             initializeDateRange();
+             // Add event listeners
+             const uploadButton = document.getElementById('uploadButton'); const refreshButton = document.getElementById('refreshButton'); const startDateInput = document.getElementById('startDate'); const endDateInput = document.getElementById('endDate'); if (uploadButton) uploadButton.addEventListener('click', uploadFile); if (refreshButton) refreshButton.addEventListener('click', fetchData); if (startDateInput) startDateInput.addEventListener('change', fetchData); if (endDateInput) endDateInput.addEventListener('change', fetchData); if (languageToggle) languageToggle.addEventListener('change', toggleLanguage); if (unitToggle) unitToggle.addEventListener('change', toggleUnits);
+             console.log("Fetching initial data..."); fetchData();
         });
     </script>
+
 </body>
 </html>
