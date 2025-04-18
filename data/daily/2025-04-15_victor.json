@@ -1,0 +1,46 @@
+{
+  "date": "2025-04-15",
+  "supplier": "Victor",
+  "shipments": [
+    {
+      "customer_name": "Tom, James & John",
+      "company": "Emerald Seafood",
+      "species": "Yellowtail",
+      "boxes": 94,
+      "weight_lbs": 2693.0, "count": null,
+      "notes": "26 boxes size 3/4-1 lbs, 67 boxes size 1-2 lbs, 1 box size 2-4 lbs, Average box weight: 28.65 lbs"
+    },
+    {
+      "customer_name": "Stephen, Mike & Bob",
+      "company": "BST Seafood",
+      "species": "Golden Tilefish",
+      "boxes": 10,
+      "weight_lbs": 747.2, "count": null,
+      "notes": "Price: $5.30/lb"
+    }
+  ],
+  "totals": {
+    "total_boxes": 104,
+    "total_weight_lbs": 3440.2,
+    "species_breakdown": {
+      "Yellowtail": {
+        "boxes": 94,
+        "weight_lbs": 2693.0
+      },
+      "Golden Tilefish": {
+        "boxes": 10,
+        "weight_lbs": 747.2
+      }
+    },
+    "customer_breakdown": {
+      "Emerald Seafood": {
+        "boxes": 94,
+        "weight_lbs": 2693.0
+      },
+      "BST Seafood": {
+        "boxes": 10,
+        "weight_lbs": 747.2
+      }
+    }
+  }
+}

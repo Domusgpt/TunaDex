@@ -1,0 +1,39 @@
+{
+  "date": "YYYY-MM-DD",
+  "supplier": "SupplierName",
+  "shipments": [
+    {
+      "customer_name": "Customer Contact Name",
+      "company": "Customer Company Name",
+      "species": "Fish Species",
+      "boxes": 0,
+      "weight_lbs": 0.0,
+      "count": null,
+      "notes": "Additional information or details about this specific shipment"
+    }
+  ],
+  "totals": {
+    "total_boxes": 0,
+    "total_weight_lbs": 0.0,
+    "species_breakdown": {
+      "Species1": {
+        "boxes": 0,
+        "weight_lbs": 0.0
+      },
+      "Species2": {
+          "boxes": 0,
+          "weight_lbs": 0.0
+      }
+    },
+    "customer_breakdown": {
+      "Company1": {
+        "boxes": 0,
+        "weight_lbs": 0.0
+      },
+       "Company2": {
+          "boxes": 0,
+          "weight_lbs": 0.0
+      }
+    }
+  }
+}

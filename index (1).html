@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seafood Shipment Dashboard</title>
+    <!-- Make sure chart.min.js is accessible -->
+    <script src="js/chart.min.js"></script>
+    <style>
+        /* --- Styles remain exactly the same --- */
+        :root {
+            --primary-bg: #f4f7f9;
+            --secondary-bg: #ffffff;
+            --header-bg: #2c3e50;
+            --header-text: #ffffff;
+            --card-shadow: rgba(0,0,0,0.08);
+            --text-color: #333;
+            --text-muted: #555;
+            --border-color: #e0e0e0;
+            --accent-color: #3498db;
+            --accent-hover: #2980b9;
+            --success-color: #2ecc71;
+            --error-color: #e74c3c;
+            --info-color: #3498db;
+            --chart-color-1: #3498db;
+            --chart-color-2: #2ecc71;
+            --chart-color-3: #f1c40f;
+            --chart-color-4: #e74c3c;
+            --chart-color-5: #9b59b6;
+            --chart-color-6: #1abc9c;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            margin: 0;
+            padding: 0;
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+            font-size: 16px; /* Base font size */
+        }
+        .container {
+            max-width: 1200px; /* Allow wider content */
+            margin: 0 auto; /* Center container */
+            padding: 15px;
+        }
+        .header {
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 0 0 5px 5px; /* Slight rounding */
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 1.8em;
+            font-weight: 600;
+        }
+        .card {
+            background-color: var(--secondary-bg);
+            border-radius: 8px; /* More pronounced rounding */
+            box-shadow: 0 4px 12px var(--card-shadow); /* Softer shadow */
+            padding: 20px;
+            margin-bottom: 20px; /* Increased spacing */
+        }
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -10px; /* Gutter compensation */
+        }
+        /* Responsive columns */
+        .col {
+            flex: 1;
+            padding: 0 10px;
+            min-width: 280px; /* Adjust min-width as needed */
+            margin-bottom: 20px;
+        }
+        /* Metrics layout */
+        .metrics {
+            display: grid; /* Use grid for better alignment */
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Responsive grid */
+            gap: 15px; /* Space between grid items */
+            margin-bottom: 20px;
+        }
+        .metric-card {
+            background-color: var(--secondary-bg);
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+            padding: 15px;
+            text-align: center; /* Center metric content */
+            border: 1px solid var(--border-color);
+        }
+        .metric-value {
+            font-size: 2em; /* Larger value */
+            font-weight: 600; /* Semi-bold */
+            color: var(--header-bg);
+            margin-bottom: 5px;
+            line-height: 1.1;
+        }
+        .metric-label {
+            color: var(--text-muted);
+            font-size: 0.9em;
+            margin-bottom: 3px;
+            font-weight: 500;
+        }
+        .metric-subtext { /* Added class for subtext */
+            color: #7f8c8d;
+            font-size: 0.8em;
+        }
+        /* Form styling */
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px; /* Increased space */
+            font-weight: 600; /* Bold labels */
+            font-size: 0.9em;
+            color: var(--text-color);
+        }
+        input[type="text"],
+        input[type="date"],
+        input[type="file"],
+        select,
+        button {
+            width: 100%;
+            padding: 10px 12px; /* Better padding */
+            border: 1px solid #ccc; /* Softer border */
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 1em;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            background-color: var(--secondary-bg);
+            color: var(--text-color);
+        }
+        input[type="file"] {
+            padding: 8px 12px; /* Slightly less padding for file input */
+        }
+        input:focus, select:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+            outline: none;
+        }
+        button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            padding: 12px 15px; /* Larger button */
+            transition: background-color 0.2s ease;
+        }
+        button:hover {
+            background-color: var(--accent-hover);
+        }
+        button:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        /* Table styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 12px 15px; /* Comfortable padding */
+            text-align: left;
+            border-bottom: 1px solid var(--border-color); /* Lighter border */
+            vertical-align: top; /* Align top for multiline content */
+        }
+        th {
+            background-color: #f2f5f7; /* Subtle header background */
+            font-weight: 600;
+            font-size: 0.85em; /* Slightly smaller header */
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+        tbody tr:hover {
+            background-color: #f9f9f9; /* Hover effect */
+        }
+        .shipment-row {
+            cursor: pointer;
+        }
+         .shipment-row:hover .expand-icon::after { /* Style for icon on hover */
+            color: var(--accent-color);
+        }
+        .shipment-details {
+            display: none; /* Initially hidden */
+            background-color: #fbfcfe; /* Slightly different background */
+        }
+        .shipment-details td {
+            padding: 0; /* Remove padding from outer cell */
+            border: none; /* Remove border from outer cell */
+        }
+        .shipment-details table {
+            margin: 0; /* Remove margin from inner table */
+            border: 1px solid #e9eef2; /* Inner table border */
+             background-color: #fbfcfe;
+        }
+         .shipment-details th {
+             background-color: #e9eef2; /* Different header for details */
+             font-size: 0.8em;
+         }
+         .shipment-details td {
+             padding: 10px 12px; /* Padding for inner cells */
+             border-bottom: 1px solid #e5e5e5;
+             border-left: 1px solid #e5e5e5; /* Vertical lines */
+             font-size: 0.9em; /* Slightly smaller text in details */
+         }
+          .shipment-details th:first-child,
+          .shipment-details td:first-child {
+            border-left: none;
+          }
+
+        /* Chart container */
+        .chart-container {
+            position: relative;
+            height: 350px; /* Increased default height */
+            width: 100%;
+        }
+        /* Status message styling */
+        #uploadStatus, #dataStatus {
+            margin-top: 10px;
+            font-size: 0.9em;
+            font-weight: 500;
+            min-height: 1.2em; /* Prevent layout shift */
+        }
+         .status-success { color: var(--success-color); }
+         .status-error { color: var(--error-color); }
+         .status-info { color: var(--info-color); }
+
+         /* Loading overlay */
+         .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            font-size: 1.2em;
+            color: var(--text-muted);
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+         }
+         .loading-overlay.visible {
+             visibility: visible;
+             opacity: 1;
+         }
+         /* Spinner */
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: var(--accent-color);
+            margin-right: 10px;
+            animation: spin 1s ease infinite;
+        }
+         /* Added class for the loading message */
+        .loading-message {
+            font-weight: 500;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+
+         /* Small screen adjustments */
+         @media (max-width: 768px) {
+            .col {
+                min-width: 100%; /* Stack columns */
+                margin-bottom: 15px;
+            }
+            .metrics {
+                 grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Adjust metrics grid */
+            }
+            .header h1 {
+                font-size: 1.5em;
+            }
+            body { font-size: 15px; }
+             .metric-value { font-size: 1.8em; }
+             th, td { padding: 10px 8px; } /* Reduce padding on small screens */
+             .shipment-details td { font-size: 0.85em; }
+         }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <!-- Wrap message in a span with a class -->
+        <span class="loading-message">Loading...</span>
+    </div>
+
+    <div class="header">
+        <h1>Seafood Shipment Dashboard</h1>
+    </div>
+
+    <div class="container">
+        <!-- Controls -->
+        <div class="card">
+             <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="fileUpload">Upload Daily JSON File</label>
+                        <input type="file" id="fileUpload" accept=".json">
+                    </div>
+                    <div class="form-group">
+                        <button id="uploadButton">Upload File</button>
+                    </div>
+                    <div id="uploadStatus"></div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="startDate">Start Date</label>
+                        <input type="date" id="startDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="endDate">End Date</label>
+                        <input type="date" id="endDate">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="reportType">Report Type (Future)</label>
+                        <select id="reportType" disabled> <!-- Disabled as backend logic is same for now -->
+                            <option value="daily" selected>Daily</option>
+                            <option value="weekly">Weekly (Aggregated Daily)</option>
+                            <option value="monthly">Monthly (Aggregated Daily)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button id="refreshButton">Refresh Data</button>
+                    </div>
+                     <div id="dataStatus"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Metrics -->
+        <div class="metrics" id="metrics">
+            <!-- Placeholder metrics -->
+            <div class="metric-card"><div class="metric-value">-</div><div class="metric-label">Total Boxes</div><div class="metric-subtext">Loading...</div></div>
+            <div class="metric-card"><div class="metric-value">-</div><div class="metric-label">Total Weight</div><div class="metric-subtext">Loading...</div></div>
+            <div class="metric-card"><div class="metric-value">-</div><div class="metric-label">Unique Customers</div><div class="metric-subtext">Loading...</div></div>
+            <div class="metric-card"><div class="metric-value">-</div><div class="metric-label">Primary Species</div><div class="metric-subtext">Loading...</div></div>
+        </div>
+
+        <!-- Charts -->
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <h2>Daily Shipment Volume</h2>
+                    <div class="chart-container">
+                        <canvas id="volumeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <h2>Customer Count by Day</h2>
+                    <div class="chart-container">
+                        <canvas id="customerChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <h2>Species Distribution (by Weight)</h2>
+                    <div class="chart-container">
+                        <canvas id="speciesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <h2>Top 5 Customers (by Weight)</h2>
+                    <div class="chart-container">
+                        <canvas id="topCustomersChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Average Swordfish Size per Box by Customer</h2>
+            <div class="chart-container">
+                <canvas id="swordfishChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Shipment Table -->
+        <div class="card">
+            <h2>Shipment Details (Click row to expand)</h2>
+            <div id="shipmentTableContainer" style="overflow-x: auto;"> <!-- Make table scrollable horizontally if needed -->
+                <table id="shipmentTable">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Boxes</th>
+                            <th>Weight (lbs)</th>
+                            <th>Customers</th>
+                            <th>Species</th>
+                        </tr>
+                    </thead>
+                    <tbody id="shipmentTableBody">
+                        <tr><td colspan="5" style="text-align: center;">Initializing...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Variables defined inside DOMContentLoaded ---
+        let charts = {};
+        let loadingOverlay;
+        let dataStatusElement;
+        let uploadStatusElement;
+        let shipmentTableBody;
+        let metricsContainer;
+        // --- End Variable Definitions ---
+
+        function showLoading(message = "Loading...") {
+             // Add null check for loadingOverlay itself
+             if (!loadingOverlay) {
+                 console.error("showLoading called before loadingOverlay element is assigned.");
+                 return;
+             }
+             // Use the new selector for the message element
+             const messageElement = loadingOverlay.querySelector('.loading-message');
+             if (messageElement) { // Check if element was found
+                 messageElement.textContent = message;
+             } else {
+                 console.error("Could not find message element (.loading-message) within loading overlay.");
+                 // Fallback: maybe just show overlay without text? Or log error.
+             }
+             loadingOverlay.classList.add('visible');
+        }
+
+        function hideLoading() {
+             if (loadingOverlay) { // Add null check
+                 loadingOverlay.classList.remove('visible');
+            }
+        }
+
+        // Initialize date range to last 7 days
+        function initializeDateRange() {
+            const endDate = new Date();
+            const startDate = new Date();
+            startDate.setDate(startDate.getDate() - 6); // Adjust to make it exactly 7 days including end date
+
+            // Check if elements exist before setting value (belt-and-suspenders)
+            const startDateInput = document.getElementById('startDate');
+            const endDateInput = document.getElementById('endDate');
+            if (startDateInput && endDateInput) {
+                startDateInput.value = formatDate(startDate);
+                endDateInput.value = formatDate(endDate);
+            } else {
+                console.error("Could not find start or end date input elements.");
+            }
+        }
+
+        // Format date as YYYY-MM-DD
+        function formatDate(date) {
+            return date.toISOString().split('T')[0];
+        }
+
+        // Helper to destroy existing chart instance
+        function destroyChart(chartId) {
+            if (charts[chartId]) {
+                try {
+                    charts[chartId].destroy();
+                } catch (e) {
+                     console.warn(`Could not destroy chart ${chartId}:`, e);
+                }
+                delete charts[chartId];
+            }
+            // Clear the canvas content as fallback
+            const canvas = document.getElementById(chartId);
+             if (canvas) {
+                 const ctx = canvas.getContext('2d');
+                 ctx.clearRect(0, 0, canvas.width, canvas.height);
+             }
+        }
+
+        // Clear all chart canvases
+        function clearAllCharts() {
+             const chartIds = ['volumeChart', 'customerChart', 'speciesChart', 'topCustomersChart', 'swordfishChart'];
+             chartIds.forEach(id => destroyChart(id));
+        }
+
+        // Clear metrics placeholders
+        function clearMetrics() {
+            // Add null check
+            if (metricsContainer) {
+                metricsContainer.innerHTML = `
+                    <div class="metric-card"><div class="metric-value">-</div><div class="metric-label">Total Boxes</div><div class="metric-subtext">No data</div></div>
+                    <div class="metric-card"><div class="metric-value">-</div><div class="metric-label">Total Weight</div><div class="metric-subtext">No data</div></div>
+                    <div class="metric-card"><div class="metric-value">-</div><div class="metric-label">Unique Customers</div><div class="metric-subtext">No data</div></div>
+                    <div class="metric-card"><div class="metric-value">-</div><div class="metric-label">Primary Species</div><div class="metric-subtext">No data</div></div>
+                `;
+            }
+        }
+
+        // Clear table content
+         function clearTable() {
+              // Add null check
+              if (shipmentTableBody) {
+                 shipmentTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No data loaded.</td></tr>';
+              }
+         }
+
+
+        // Fetch data from API
+        async function fetchData() {
+            // Get elements within the function scope OR rely on globally assigned ones
+            const startDateInput = document.getElementById('startDate');
+            const endDateInput = document.getElementById('endDate');
+            const startDate = startDateInput ? startDateInput.value : null;
+            const endDate = endDateInput ? endDateInput.value : null;
+
+            // Use 'daily' report type for now, as backend delegates
+            const reportType = 'daily'; // document.getElementById('reportType').value;
+
+            // Check elements exist before accessing properties
+            if (!dataStatusElement) {
+                console.error("dataStatusElement not found");
+                return;
+            }
+
+            if (!startDate || !endDate) {
+                 dataStatusElement.innerHTML = `<span class="status-error">Please select both start and end dates.</span>`;
+                 return;
+            }
+            if (new Date(startDate) > new Date(endDate)) {
+                 dataStatusElement.innerHTML = `<span class="status-error">Start date cannot be after end date.</span>`;
+                 return;
+            }
+
+            showLoading("Fetching data...");
+            dataStatusElement.innerHTML = `<span class="status-info">Loading data...</span>`;
+            if (uploadStatusElement) uploadStatusElement.innerHTML = ''; // Clear upload status
+
+            // Clear previous data visually while loading
+            clearMetrics();
+            clearAllCharts();
+            clearTable();
+
+            try {
+                 // Construct URL - ensures parameters are encoded correctly
+                 const url = new URL(`/api/reports/${reportType}`, window.location.origin);
+                 url.searchParams.append('start_date', startDate);
+                 url.searchParams.append('end_date', endDate);
+
+                console.log("Fetching data from:", url.toString());
+                 // Added cache control based on previous discussion
+                const response = await fetch(url, { cache: 'no-cache' });
+
+                const responseText = await response.text(); // Get response text first for debugging
+
+                if (!response.ok) {
+                     // Handle 304 Not Modified specifically - treat as success but no data update needed?
+                     // Or better: rely on cache:'no-cache' to always get 200 or error
+                     if (response.status === 304) {
+                         console.warn("Received 304 Not Modified. Cache might be interfering despite 'no-cache'.");
+                         // Optionally update status but don't parse JSON
+                         dataStatusElement.innerHTML = `<span class="status-info">Data not modified.</span>`;
+                         hideLoading(); // Still hide loading
+                         return; // Exit function early
+                     }
+
+                     let errorDetail = 'Unknown server error';
+                     try {
+                         const errorData = JSON.parse(responseText);
+                         errorDetail = errorData.detail || JSON.stringify(errorData);
+                     } catch (e) {
+                          errorDetail = responseText.substring(0, 200); // Show first part of non-JSON error
+                     }
+                     console.error('API Error Response Text:', responseText);
+                    throw new Error(`Failed: ${response.status} ${response.statusText} - ${errorDetail}`);
+                }
+
+                const data = JSON.parse(responseText); // Parse JSON only if response is OK (not 304)
+                console.log("Data received:", data);
+                updateDashboard(data);
+                dataStatusElement.innerHTML = `<span class="status-success">Data loaded successfully.</span>`;
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                 if (dataStatusElement) { // Check again before setting error message
+                     dataStatusElement.innerHTML = `<span class="status-error">Error: ${error.message}</span>`;
+                 }
+                // Ensure UI is cleared on error
+                clearMetrics();
+                clearAllCharts();
+                clearTable();
+                 if (shipmentTableBody) { // Check element
+                     shipmentTableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--error-color);">Failed to load data.</td></tr>`;
+                 }
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Upload JSON file
+        async function uploadFile() {
+            const fileInput = document.getElementById('fileUpload');
+            const uploadButton = document.getElementById('uploadButton');
+
+            // Check elements exist
+            if (!uploadStatusElement) { console.error("uploadStatusElement not found"); return; }
+            if (!fileInput) { console.error("fileInput not found"); return; }
+            if (!uploadButton) { console.error("uploadButton not found"); return; }
+
+
+            if (!fileInput.files || fileInput.files.length === 0) {
+                uploadStatusElement.innerHTML = '<span class="status-error">Please select a file first</span>';
+                return;
+            }
+
+            const file = fileInput.files[0];
+            // Basic check, server does the main validation
+            if (!file.name.toLowerCase().endsWith('.json')) {
+                uploadStatusElement.innerHTML = '<span class="status-error">Please select a JSON file (.json)</span>';
+                return;
+            }
+
+            showLoading("Uploading file...");
+            uploadStatusElement.innerHTML = '<span class="status-info">Uploading...</span>';
+             if (dataStatusElement) dataStatusElement.innerHTML = ''; // Clear data status
+            uploadButton.disabled = true; // Disable button during upload
+
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/api/upload/daily', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json(); // Assume server always returns JSON, even for errors
+
+                if (!response.ok) {
+                     console.error('Upload Error Response:', result);
+                    throw new Error(`Upload failed: ${response.status} - ${result.detail || JSON.stringify(result) || 'Server error'}`);
+                }
+
+                console.log("Upload successful:", result);
+                uploadStatusElement.innerHTML = `<span class="status-success">${result.message || 'File uploaded.'}</span>`;
+                fileInput.value = ''; // Clear the file input
+
+                // Refresh data after successful upload
+                await fetchData(); // Wait for data refresh to complete
+
+            } catch (error) {
+                console.error('Error uploading file:', error);
+                uploadStatusElement.innerHTML = `<span class="status-error">Upload Error: ${error.message}</span>`;
+                 // Don't clear data on upload error, just show the error
+            } finally {
+                 hideLoading();
+                 uploadButton.disabled = false; // Re-enable button
+            }
+        }
+
+        // Update metrics cards (function content remains the same)
+        function updateMetrics(data) {
+             if (!metricsContainer) { console.error("metricsContainer not found."); return; }
+             metricsContainer.innerHTML = ''; // Clear previous metrics
+
+            const dailyData = data?.dailyData || [];
+
+            // Calculate summary metrics
+            let totalBoxes = 0;
+            let totalWeight = 0;
+            dailyData.forEach(day => {
+                totalBoxes += Number(day.boxes) || 0;
+                totalWeight += Number(day.weight) || 0;
+            });
+
+            const numDays = dailyData.length;
+            const avgBoxesPerDay = numDays > 0 ? totalBoxes / numDays : 0;
+            const avgWeightPerDay = numDays > 0 ? totalWeight / numDays : 0;
+
+            // Count unique customers accurately from shipments
+            const allCustomers = new Set();
+             dailyData.forEach(day => {
+                 (day.shipments || []).forEach(shipment => {
+                     const company = shipment?.company?.trim();
+                     if (company && company !== "Unknown") {
+                         allCustomers.add(company);
+                     }
+                 });
+             });
+             const uniqueCustomers = allCustomers.size;
+
+
+            // Get primary species from aggregated data
+            const speciesData = data?.speciesData || [];
+            let mainSpecies = 'N/A';
+            let mainSpeciesPercent = '0';
+            let totalSpeciesWeight = speciesData.reduce((sum, s) => sum + (Number(s.value) || 0), 0);
+
+            if (speciesData.length > 0 && speciesData[0].value > 0) {
+                const topSpecies = speciesData[0];
+                mainSpecies = topSpecies.name || 'N/A';
+                // Use overall total weight for percentage if available and makes sense, otherwise use sum of species weights
+                const denominator = totalWeight > 0 ? totalWeight : totalSpeciesWeight;
+                 mainSpeciesPercent = denominator > 0
+                     ? (( (Number(topSpecies.value) || 0) / denominator) * 100).toFixed(1)
+                     : '0';
+            }
+
+            // Create metric cards
+            const metrics = [
+                { label: 'Total Boxes', value: totalBoxes.toLocaleString(), subtext: `Avg ${avgBoxesPerDay.toLocaleString(undefined, {maximumFractionDigits: 1})}/day` },
+                { label: 'Total Weight (lbs)', value: totalWeight.toLocaleString(undefined, {maximumFractionDigits: 1}), subtext: `Avg ${avgWeightPerDay.toLocaleString(undefined, {maximumFractionDigits: 1})}/day` },
+                { label: 'Unique Customers', value: uniqueCustomers.toLocaleString(), subtext: `Over ${numDays} day(s)` },
+                { label: 'Primary Species', value: mainSpecies, subtext: `${mainSpeciesPercent}% of weight` }
+            ];
+
+            metrics.forEach(metric => {
+                const card = document.createElement('div');
+                card.className = 'metric-card';
+                card.innerHTML = `
+                    <div class="metric-value">${metric.value}</div>
+                    <div class="metric-label">${metric.label}</div>
+                    <div class="metric-subtext">${metric.subtext}</div>
+                `;
+                metricsContainer.appendChild(card);
+            });
+        }
+
+        // Update charts (function content remains the same)
+        function updateCharts(data) {
+            const dailyData = data?.dailyData || [];
+            const speciesData = data?.speciesData || [];
+            const customerData = data?.customerData || []; // Already limited to top 5 by backend
+            const swordData = data?.swordData || [];
+
+            // Chart colors from CSS variables
+            const colors = [
+                getComputedStyle(document.documentElement).getPropertyValue('--chart-color-1').trim(),
+                getComputedStyle(document.documentElement).getPropertyValue('--chart-color-2').trim(),
+                getComputedStyle(document.documentElement).getPropertyValue('--chart-color-3').trim(),
+                getComputedStyle(document.documentElement).getPropertyValue('--chart-color-4').trim(),
+                getComputedStyle(document.documentElement).getPropertyValue('--chart-color-5').trim(),
+                getComputedStyle(document.documentElement).getPropertyValue('--chart-color-6').trim()
+             ];
+
+
+            // Destroy previous charts before creating new ones
+            clearAllCharts();
+
+
+            // --- Daily Volume Chart ---
+            if (dailyData.length > 0) {
+                const volumeCtx = document.getElementById('volumeChart').getContext('2d');
+                charts['volumeChart'] = new Chart(volumeCtx, {
+                    type: 'line',
+                    data: {
+                        labels: dailyData.map(day => day.date || 'N/A'),
+                        datasets: [
+                            {
+                                label: 'Boxes',
+                                data: dailyData.map(day => Number(day.boxes) || 0),
+                                borderColor: colors[0],
+                                backgroundColor: colors[0] + '1A', // Add alpha for fill
+                                yAxisID: 'y',
+                                tension: 0.1 // Slight curve
+                            },
+                            {
+                                label: 'Weight (lbs)',
+                                data: dailyData.map(day => Number(day.weight) || 0),
+                                borderColor: colors[1],
+                                backgroundColor: colors[1] + '1A', // Add alpha for fill
+                                yAxisID: 'y1',
+                                tension: 0.1 // Slight curve
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
+                        scales: {
+                            x: { title: { display: true, text: 'Date' } },
+                            y: { type: 'linear', position: 'left', title: { display: true, text: 'Boxes' }, beginAtZero: true },
+                            y1: { type: 'linear', position: 'right', title: { display: true, text: 'Weight (lbs)' }, grid: { drawOnChartArea: false }, beginAtZero: true }
+                        },
+                        plugins: { tooltip: { mode: 'index', intersect: false } }
+                    }
+                });
+            }
+
+             // --- Customer Count Chart ---
+             if (dailyData.length > 0) {
+                const customerCtx = document.getElementById('customerChart').getContext('2d');
+                charts['customerChart'] = new Chart(customerCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: dailyData.map(day => day.date || 'N/A'),
+                        datasets: [{
+                            label: 'Customer Count',
+                            data: dailyData.map(day => Number(day.customers) || 0),
+                            backgroundColor: colors[2]
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                         scales: {
+                             x: { title: { display: true, text: 'Date' } },
+                             y: { beginAtZero: true, title: { display: true, text: 'Number of Customers'}, ticks: { stepSize: 1 } } // Ensure integer ticks
+                         }
+                    }
+                });
+             }
+
+            // --- Species Distribution Chart ---
+             if (speciesData.length > 0) {
+                const speciesCtx = document.getElementById('speciesChart').getContext('2d');
+                charts['speciesChart'] = new Chart(speciesCtx, {
+                    type: 'doughnut', // Doughnut often looks cleaner than Pie
+                    data: {
+                        labels: speciesData.map(species => species.name || 'Unknown'),
+                        datasets: [{
+                            data: speciesData.map(species => Number(species.value) || 0),
+                            backgroundColor: speciesData.map((_, i) => colors[i % colors.length]),
+                            borderColor: '#fff', // White border between segments
+                            borderWidth: 2 // Slightly thicker border
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'bottom', labels: { padding: 20 } },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const value = Number(context.raw) || 0;
+                                        const total = context.dataset.data.reduce((a, b) => (Number(a) || 0) + (Number(b) || 0), 0);
+                                        const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                        return ` ${context.label}: ${value.toLocaleString(undefined, {maximumFractionDigits: 1})} lbs (${percentage}%)`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+             }
+
+            // --- Top Customers Chart ---
+            if (customerData.length > 0) {
+                const topCustomersCtx = document.getElementById('topCustomersChart').getContext('2d');
+                charts['topCustomersChart'] = new Chart(topCustomersCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: customerData.map(customer => customer.name || 'Unknown'),
+                        datasets: [{
+                            label: 'Weight (lbs)',
+                            data: customerData.map(customer => Number(customer.value) || 0),
+                            backgroundColor: colors[3]
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false, indexAxis: 'y', // Horizontal bars
+                        scales: {
+                             x: { beginAtZero: true, title: { display: true, text: 'Total Weight (lbs)'} },
+                             y: { title: { display: false } } // Title often redundant with horizontal labels
+                         },
+                         plugins: { legend: { display: false } } // Legend often redundant for single dataset bar chart
+                    }
+                });
+            }
+
+            // --- Swordfish Size Chart ---
+            if (swordData.length > 0) {
+                const swordfishCtx = document.getElementById('swordfishChart').getContext('2d');
+                charts['swordfishChart'] = new Chart(swordfishCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: swordData.map(data => data.name || 'Unknown'),
+                        datasets: [{
+                            label: 'Avg Size per Box (lbs)',
+                            data: swordData.map(data => Number(data.avgSize) || 0),
+                            backgroundColor: colors[4]
+                        }]
+                    },
+                     options: {
+                        responsive: true, maintainAspectRatio: false,
+                        scales: {
+                             x: { title: { display: true, text: 'Customer (First Name)' } },
+                             y: { beginAtZero: true, title: { display: true, text: 'Avg Weight/Box (lbs)'} }
+                         },
+                         plugins: { legend: { display: false } }
+                    }
+                });
+             }
+        }
+
+        // Update shipment table (function content remains the same)
+        function updateShipmentTable(data) {
+             if (!shipmentTableBody) { console.error("shipmentTableBody not found."); return; }
+             shipmentTableBody.innerHTML = ''; // Clear previous content
+
+            const dailyData = data?.dailyData || [];
+
+            if (dailyData.length === 0) {
+                 shipmentTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No shipment data found for the selected period.</td></tr>';
+                 return;
+            }
+
+            dailyData.forEach((day, index) => {
+                // Create row for day summary
+                const row = document.createElement('tr');
+                row.className = 'shipment-row';
+                row.dataset.index = index; // Use index for linking
+                row.setAttribute('aria-expanded', 'false'); // Accessibility
+                row.setAttribute('aria-controls', `details-${index}`);
+
+                // Determine species string safely
+                 let speciesString = 'N/A';
+                 if (day && day.species && typeof day.species === 'object' && Object.keys(day.species).length > 0) {
+                     speciesString = Object.keys(day.species).join(', ');
+                 }
+
+                 // Use Number() for safe conversion and toLocaleString for formatting
+                row.innerHTML = `
+                    <td>${day?.date || 'N/A'}</td>
+                    <td>${(Number(day?.boxes) || 0).toLocaleString()}</td>
+                    <td>${(Number(day?.weight) || 0).toLocaleString(undefined, {maximumFractionDigits: 1})}</td>
+                    <td>${(Number(day?.customers) || 0).toLocaleString()}</td>
+                    <td>${speciesString}</td>
+                `;
+                shipmentTableBody.appendChild(row);
+
+                // Create hidden row for shipment details
+                const shipments = day?.shipments;
+                if (Array.isArray(shipments) && shipments.length > 0) {
+                    const detailsRow = document.createElement('tr');
+                    detailsRow.className = 'shipment-details'; // Initially hidden by CSS
+                    detailsRow.id = `details-${index}`;
+                    detailsRow.setAttribute('role', 'region');
+
+                    const detailsCell = document.createElement('td');
+                    detailsCell.colSpan = 5; // Span all columns
+
+                    let detailsHtml = `
+                        <div style="padding: 10px;"> <!-- Inner padding -->
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Customer</th>
+                                    <th>Company</th>
+                                    <th>Species</th>
+                                    <th>Boxes</th>
+                                    <th>Weight (lbs)</th>
+                                    <th>Count</th>
+                                    <th>Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
+
+                    shipments.forEach(shipment => {
+                         const weightDisplay = (shipment?.weight_lbs !== undefined && shipment?.weight_lbs !== null)
+                             ? (Number(shipment.weight_lbs) || 0).toLocaleString(undefined, {maximumFractionDigits: 1})
+                             : '-';
+                        detailsHtml += `
+                            <tr>
+                                <td>${shipment?.customer_name || '-'}</td>
+                                <td>${shipment?.company || '-'}</td>
+                                <td>${shipment?.species || '-'}</td>
+                                <td>${(Number(shipment?.boxes) || 0).toLocaleString() || '-'}</td>
+                                <td>${weightDisplay}</td>
+                                <td>${shipment?.count || '-'}</td>
+                                <td>${shipment?.notes || '-'}</td>
+                            </tr>`;
+                    });
+
+                    detailsHtml += `</tbody></table></div>`;
+                    detailsCell.innerHTML = detailsHtml;
+                    detailsRow.appendChild(detailsCell);
+                    shipmentTableBody.appendChild(detailsRow);
+
+                    // Add click listener to the summary row
+                    row.addEventListener('click', function() {
+                        const details = document.getElementById(`details-${this.dataset.index}`);
+                        if (details) {
+                             const isExpanded = this.getAttribute('aria-expanded') === 'true';
+                             this.setAttribute('aria-expanded', !isExpanded);
+                             details.style.display = isExpanded ? 'none' : 'table-row';
+                        }
+                    });
+
+                } else {
+                    // Add listener even if no details, but do nothing visually
+                     row.addEventListener('click', function() {
+                         console.log(`No details to show for ${day?.date}`);
+                         // Optionally add a visual cue it's not expandable
+                         this.style.cursor = 'default';
+                     });
+                }
+            });
+        }
+
+        // Update dashboard with new data
+        function updateDashboard(data) {
+            // Basic validation of received data structure
+             if (!data || typeof data !== 'object' || !Array.isArray(data.dailyData)) {
+                 console.error("Invalid data structure received for dashboard update:", data);
+                 // Check if element exists before showing error
+                 if (dataStatusElement) {
+                    dataStatusElement.innerHTML = `<span class="status-error">Error: Received invalid data structure from server.</span>`;
+                 }
+                 clearMetrics();
+                 clearAllCharts();
+                 clearTable();
+                 return;
+             }
+            updateMetrics(data);
+            updateCharts(data);
+            updateShipmentTable(data);
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("DOM fully loaded and parsed");
+
+            // --- Assign global variables AFTER DOM is loaded ---
+            loadingOverlay = document.getElementById('loadingOverlay');
+            dataStatusElement = document.getElementById('dataStatus');
+            uploadStatusElement = document.getElementById('uploadStatus');
+            shipmentTableBody = document.getElementById('shipmentTableBody');
+            metricsContainer = document.getElementById('metrics');
+            // --- End Assignment ---
+
+
+            // Check if elements were found (optional debug)
+            if (!loadingOverlay) console.error("loadingOverlay not found after DOM load");
+            if (!dataStatusElement) console.error("dataStatusElement not found after DOM load");
+            // etc.
+
+            // Set date range
+            initializeDateRange();
+
+            // Add event listeners (check if buttons exist first)
+            const uploadButton = document.getElementById('uploadButton');
+            const refreshButton = document.getElementById('refreshButton');
+            const startDateInput = document.getElementById('startDate');
+            const endDateInput = document.getElementById('endDate');
+
+            if (uploadButton) uploadButton.addEventListener('click', uploadFile);
+            else console.error("uploadButton not found");
+
+            if (refreshButton) refreshButton.addEventListener('click', fetchData);
+            else console.error("refreshButton not found");
+
+            if (startDateInput) startDateInput.addEventListener('change', fetchData);
+            else console.error("startDate input not found");
+
+            if (endDateInput) endDateInput.addEventListener('change', fetchData);
+            else console.error("endDate input not found");
+
+            // Load initial data
+            console.log("Fetching initial data...");
+            fetchData();
+        });
+    </script>
+</body>
+</html>

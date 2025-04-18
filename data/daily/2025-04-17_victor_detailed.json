@@ -1,0 +1,122 @@
+{
+  "date": "2025-04-17",
+  "supplier": "Victor",
+  "shipments": [
+    {
+      "customer_name": "Mark",
+      "company": "Mark's Seafood",
+      "species": "Swordfish",
+      "boxes": 4,
+      "weight_lbs": 963.0,
+      "count": 8,
+      "notes": ""
+    },
+    {
+      "customer_name": "Chade",
+      "company": "Lockwood-Winant",
+      "species": "Swordfish",
+      "boxes": 5,
+      "weight_lbs": 1031.5, "count": null,
+      "notes": "More swordfish Friday market"
+    },
+    {
+      "customer_name": "Bryan",
+      "company": "Gosman's Fish Market",
+      "species": "Swordfish",
+      "boxes": 3,
+      "weight_lbs": 539.0, "count": null,
+      "notes": ""
+    },
+    {
+      "customer_name": "Richie & Amos",
+      "company": "Congressional",
+      "species": "Black Grouper",
+      "boxes": 10,
+      "weight_lbs": 680.0, "count": null,
+      "notes": ""
+    },
+    {
+      "customer_name": "Richie & Amos",
+      "company": "Congressional",
+      "species": "Swordfish",
+      "boxes": 3,
+      "weight_lbs": 597.0, "count": null,
+      "notes": "Balance Friday at door"
+    },
+    {
+      "customer_name": "Joseph",
+      "company": "Samuels Seafood",
+      "species": "Swordfish",
+      "boxes": 2,
+      "weight_lbs": 461.0,
+      "count": 4,
+      "notes": "Next swordfish Friday at door"
+    },
+    {
+      "customer_name": "Robby",
+      "company": "Great Eastern",
+      "species": "Swordfish",
+      "boxes": 8,
+      "weight_lbs": 1414.0, "count": null,
+      "notes": ""
+    },
+    {
+      "customer_name": "Mike & Bob",
+      "company": "BST Seafood",
+      "species": "Swordfish",
+      "boxes": 11,
+      "weight_lbs": 2033.0, "count": null,
+      "notes": "Next Friday and Saturday Boston"
+    },
+    {
+      "customer_name": "Manny",
+      "company": "Stavis",
+      "species": "Swordfish",
+      "boxes": 10,
+      "weight_lbs": 1900.0, "count": null,
+      "notes": "Next Friday Boston"
+    },
+    {
+      "customer_name": "Gordon",
+      "company": "Sam Rust",
+      "species": "Swordfish",
+      "boxes": 2,
+      "weight_lbs": 410.0, "count": null,
+      "notes": ""
+    },
+    {
+      "customer_name": "Vinny",
+      "company": "BA Seafood",
+      "species": "Swordfish",
+      "boxes": 3,
+      "weight_lbs": 510.0, "count": null,
+      "notes": "Deliver at door, not Seacap Boston (typo correction)"
+    }
+  ],
+  "totals": {
+    "total_boxes": 61,
+    "total_weight_lbs": 10538.5,
+    "species_breakdown": {
+      "Swordfish": {
+        "boxes": 51,
+        "weight_lbs": 9858.5
+      },
+      "Black Grouper": {
+        "boxes": 10,
+        "weight_lbs": 680.0
+      }
+    },
+    "customer_breakdown": {
+      "Mark's Seafood": { "boxes": 4, "weight_lbs": 963.0 },
+      "Lockwood-Winant": { "boxes": 5, "weight_lbs": 1031.5 },
+      "Gosman's Fish Market": { "boxes": 3, "weight_lbs": 539.0 },
+      "Congressional": { "boxes": 13, "weight_lbs": 1277.0 },
+      "Samuels Seafood": { "boxes": 2, "weight_lbs": 461.0 },
+      "Great Eastern": { "boxes": 8, "weight_lbs": 1414.0 },
+      "BST Seafood": { "boxes": 11, "weight_lbs": 2033.0 },
+      "Stavis": { "boxes": 10, "weight_lbs": 1900.0 },
+      "Sam Rust": { "boxes": 2, "weight_lbs": 410.0 },
+      "BA Seafood": { "boxes": 3, "weight_lbs": 510.0 }
+    }
+  }
+}

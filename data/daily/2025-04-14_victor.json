@@ -1,0 +1,117 @@
+{
+  "date": "2025-04-14",
+  "supplier": "Victor",
+  "shipments": [
+    {
+      "customer_name": "Mark",
+      "company": "Mark's Seafood",
+      "species": "Swordfish",
+      "boxes": 6,
+      "weight_lbs": 1108.0,
+      "count": 10,
+      "notes": "Split in 2 shipments: 4 boxes (6 count, 720 lbs) and 2 boxes (4 count, 388 lbs)"
+    },
+    {
+      "customer_name": "Chade",
+      "company": "Lockwood-Winant",
+      "species": "Swordfish",
+      "boxes": 7,
+      "weight_lbs": 1383.0,
+      "count": 14,
+      "notes": "Split in 2 shipments: 3 boxes (5 count, 631.4 lbs, AWB: 549-4290-3862) and 4 boxes (9 count, 751.6 lbs, AWB: 549-4290-3851)"
+    },
+    {
+      "customer_name": "Richie & Amos",
+      "company": "Congressional",
+      "species": "Swordfish",
+      "boxes": 4,
+      "weight_lbs": 840.0,
+      "notes": "AWB: 549-4290-3862, Price: $6.25"
+    },
+    {
+      "customer_name": "Richie & Amos",
+      "company": "Congressional",
+      "species": "Black Grouper",
+      "boxes": 8,
+      "weight_lbs": 446.5,
+      "notes": "AWB: 549-4290-3862, Price: $7.65"
+    },
+    {
+      "customer_name": "Mike & Bob",
+      "company": "BST Seafood",
+      "species": "Swordfish",
+      "boxes": 2,
+      "weight_lbs": 356.0,
+      "count": 4,
+      "notes": "Client confirmed delivery, requested more stock"
+    },
+    {
+      "customer_name": "Manny",
+      "company": "Stavis",
+      "species": "Swordfish",
+      "boxes": 2,
+      "weight_lbs": 334.0,
+      "notes": "Next swordfish forecast: Wednesday JFK, Thursday Boston"
+    },
+    {
+      "customer_name": "Stuart",
+      "company": "Stavis",
+      "species": "Yellowtail",
+      "boxes": 10,
+      "weight_lbs": 286.5,
+      "notes": "Size: 1-2 lbs, Price: $5.60, PO#: 25001953, Average box weight: 28.65 lbs"
+    },
+    {
+      "customer_name": "Tom, James & John",
+      "company": "Emerald Seafood",
+      "species": "Yellowtail",
+      "boxes": 45,
+      "weight_lbs": 1289.25, "count": null,
+      "notes": "AWB: 549-4290-3862, 42 boxes size 3/4-1 lbs, 3 boxes size 1-2 lbs. Est Weight: 45 * 28.65"
+    }
+  ],
+  "totals": {
+    "total_boxes": 84,
+    "total_weight_lbs": 5743.25,
+    "species_breakdown": {
+      "Swordfish": {
+        "boxes": 21,
+        "weight_lbs": 4021.0
+      },
+      "Yellowtail": {
+        "boxes": 55,
+        "weight_lbs": 1575.75
+      },
+      "Black Grouper": {
+        "boxes": 8,
+        "weight_lbs": 446.5
+      }
+    },
+    "customer_breakdown": {
+      "Mark's Seafood": {
+        "boxes": 6,
+        "weight_lbs": 1108.0
+      },
+      "Lockwood-Winant": {
+        "boxes": 7,
+        "weight_lbs": 1383.0
+      },
+      "Congressional": {
+        "boxes": 12,
+        "weight_lbs": 1286.5
+      },
+      "BST Seafood": {
+        "boxes": 2,
+        "weight_lbs": 356.0
+      },
+      "Stavis": {
+        "boxes": 12,
+        "weight_lbs": 620.5
+      },
+      "Emerald Seafood": {
+        "boxes": 45,
+        "weight_lbs": 1289.25
+      }
+    }
+  }
+}

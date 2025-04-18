@@ -1,0 +1,43 @@
+{
+  "date": "2025-04-17",
+  "supplier": "Victor",
+  "shipments": [
+    {
+      "customer_name": "Mark",
+      "company": "Mark's Seafood",
+      "species": "Swordfish",
+      "boxes": 4,
+      "weight_lbs": 963.0,
+      "count": 8,
+      "notes": ""
+    },
+    {
+      "customer_name": "Chade",
+      "company": "Lockwood-Winant",
+      "species": "Swordfish",
+      "boxes": 5,
+      "weight_lbs": 1031.5,
+      "notes": "More swordfish Friday market"
+    }
+  ],
+  "totals": {
+    "total_boxes": 9,
+    "total_weight_lbs": 1994.5,
+    "species_breakdown": {
+      "Swordfish": {
+        "boxes": 9,
+        "weight_lbs": 1994.5
+      }
+    },
+    "customer_breakdown": {
+      "Mark's Seafood": {
+        "boxes": 4,
+        "weight_lbs": 963.0
+      },
+      "Lockwood-Winant": {
+        "boxes": 5,
+        "weight_lbs": 1031.5
+      }
+    }
+  }
+}
