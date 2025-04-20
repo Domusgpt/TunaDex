@@ -30,7 +30,7 @@ jobs:
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: tunadexacr.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_73c14a645fe045ddbfe6053f6604a0e8 }}/tuna-dex-image:${{ github.sha }}
+        tags: tunadexacr.azurecr.io/tuna-dex-image:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
