@@ -47,5 +47,5 @@ jobs:
       with:
         app-name: 'tunadex-app'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_0f64fc754c87405daecf263c7678f95f }}
-        images: 'tunadexacr.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_73c14a645fe045ddbfe6053f6604a0e8 }}/tuna-dex-image:${{ github.sha }}'
+        publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_0F64FC754C87405DAECF263C46913510 }}
+        images: 'tunadexacr.azurecr.io/tuna-dex-image:${{ github.sha }}'
