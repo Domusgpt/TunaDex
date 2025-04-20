@@ -1,0 +1,30 @@
+{
+  "date": "2025-04-16",
+  "supplier": "Victor",
+  "shipments": [
+    {
+      "customer_name": "Tom, James & John",
+      "company": "Emerald Seafood",
+      "species": "Pink Porgy",
+      "boxes": 80,
+      "weight_lbs": 2115.8, "count": null,
+      "notes": "Average box weight: 26.45 lbs"
+    }
+  ],
+  "totals": {
+    "total_boxes": 80,
+    "total_weight_lbs": 2115.8,
+    "species_breakdown": {
+      "Pink Porgy": {
+        "boxes": 80,
+        "weight_lbs": 2115.8
+      }
+    },
+    "customer_breakdown": {
+      "Emerald Seafood": {
+        "boxes": 80,
+        "weight_lbs": 2115.8
+      }
+    }
+  }
+}
